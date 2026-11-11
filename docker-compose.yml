@@ -1,0 +1,50 @@
+# ============================================================================
+# Ambiente local: backend + PostgreSQL (Req 11.2, 11.3)
+#
+# Uso:  copie .env.example para .env, ajuste a senha e rode `docker compose up --build`.
+# As credenciais vêm só do .env (que não é versionado). Sem elas, o compose
+# recusa iniciar, em vez de subir com uma senha padrão (Req 11.6).
+# ============================================================================
+
+name: irrigation
+
+services:
+  postgresql:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-irrigation_db}
+      POSTGRES_USER: ${SPRING_DATASOURCE_USERNAME:?defina SPRING_DATASOURCE_USERNAME no .env}
+      POSTGRES_PASSWORD: ${SPRING_DATASOURCE_PASSWORD:?defina SPRING_DATASOURCE_PASSWORD no .env}
+    ports:
+      # Publicado só no loopback IPv4: o banco não fica acessível pela rede local.
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      # -h 127.0.0.1 força TCP: durante a inicialização da imagem o servidor temporário
+      # só escuta no socket local, então o banco só fica "healthy" quando aceita conexões de rede.
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U \"$${POSTGRES_USER}\" -d \"$${POSTGRES_DB}\""]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+
+  irrigation-backend:
+    build: .
+    image: irrigation-backend:local
+    depends_on:
+      postgresql:
+        condition: service_healthy
+    environment:
+      # Dentro da rede do compose o banco é acessado pelo nome do serviço.
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgresql:5432/${POSTGRES_DB:-irrigation_db}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME:?defina SPRING_DATASOURCE_USERNAME no .env}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD:?defina SPRING_DATASOURCE_PASSWORD no .env}
+    ports:
+      # Loopback IPv4: sem listener IPv6, "localhost" (::1) é recusado na hora e o cliente
+      # cai para 127.0.0.1. Com a porta em todas as interfaces, o Docker Desktop abria um
+      # listener em ::1 que aceitava a conexão e não respondia.
+      - "127.0.0.1:${APP_PORT:-8080}:8080"
+
+volumes:
+  postgres-data:

@@ -1,0 +1,4 @@
+# O gradlew é executado em Linux (Dockerfile): precisa manter LF mesmo em checkout no Windows.
+gradlew text eol=lf
+*.sh    text eol=lf
+*.bat   text eol=crlf

@@ -1,0 +1,60 @@
+# ============================================================================
+# Configuração base — irrigation-management-backend
+# ============================================================================
+
+server:
+  port: 8080
+
+spring:
+  # --- Application ---
+  application:
+    name: irrigation-management-backend
+
+  # --- Datasource (configuração via variáveis de ambiente — Req 11.4, 11.5) ---
+  # Usuário e senha não têm valor padrão (Req 11.6): sem as variáveis, a aplicação
+  # não inicia. Ver .env.example e o README.
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/irrigation_db}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  # --- JPA / Hibernate (Flyway como única fonte de verdade do schema) ---
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+    open-in-view: false
+
+  # --- Flyway migrations ---
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: false
+
+  # --- Problem Details (RFC 7807) ---
+  mvc:
+    problemdetails:
+      enabled: true
+
+# --- Actuator / Health checks ---
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
+
+# --- Springdoc OpenAPI ---
+springdoc:
+  # Documenta apenas a API de negócio (Req 12.1), sem endpoints do Actuator
+  paths-to-match: /api/v1/**
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true

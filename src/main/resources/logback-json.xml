@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Appender JSON (Req 9.4, 7.5). Fragmento Logback puro, sem tags do Spring, para poder
+  ser carregado também em testes unitários.
+
+  Campos: timestamp, severity (ERROR/WARN/INFO/...), message, logger, thread, mdc,
+  e, quando há exceção: exceptionType, exceptionMessage e stackTrace.
+-->
+<included>
+    <appender name="JSON" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <timestamp>
+                    <fieldName>timestamp</fieldName>
+                </timestamp>
+                <logLevel>
+                    <fieldName>severity</fieldName>
+                </logLevel>
+                <loggerName>
+                    <fieldName>logger</fieldName>
+                </loggerName>
+                <threadName>
+                    <fieldName>thread</fieldName>
+                </threadName>
+                <message>
+                    <fieldName>message</fieldName>
+                </message>
+                <mdc/>
+                <throwableClassName>
+                    <fieldName>exceptionType</fieldName>
+                    <!-- Nome qualificado, para não haver ambiguidade entre pacotes. -->
+                    <useSimpleClassName>false</useSimpleClassName>
+                </throwableClassName>
+                <throwableMessage>
+                    <fieldName>exceptionMessage</fieldName>
+                </throwableMessage>
+                <stackTrace>
+                    <fieldName>stackTrace</fieldName>
+                </stackTrace>
+            </providers>
+        </encoder>
+    </appender>
+</included>

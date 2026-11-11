@@ -1,0 +1,15 @@
+# Mantém o contexto de build pequeno e fora dele qualquer arquivo local ou segredo.
+.git
+.gradle
+build
+.kiro
+.idea
+.vscode
+*.iml
+.jqwik-database
+.env
+*.env.local
+docs
+*.md
+Dockerfile
+docker-compose.yml

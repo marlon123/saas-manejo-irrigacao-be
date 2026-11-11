@@ -1,0 +1,17 @@
+# ============================================================================
+# Perfil de desenvolvimento — application-dev.yml
+# ============================================================================
+
+# O datasource vem do application.yml (variáveis de ambiente, sem credenciais padrão).
+spring:
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+logging:
+  level:
+    com.irrigation: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.flywaydb: INFO

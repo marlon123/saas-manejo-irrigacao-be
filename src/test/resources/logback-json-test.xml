@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Usado apenas por LogbackJsonConfigurationTest: carrega o appender JSON de produção. -->
+<configuration>
+    <include resource="logback-json.xml"/>
+    <root level="INFO">
+        <appender-ref ref="JSON"/>
+    </root>
+</configuration>
