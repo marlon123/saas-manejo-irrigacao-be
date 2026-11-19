@@ -7,7 +7,7 @@
 O plano tem 7 fases, na ordem do item 8 do `requirements.md` e do "Plano de entrega em fases" do `design.md`. Cada fase termina em um checkpoint com build, testes e relatórios conferidos (contagens nos XML de `build/test-results`, relatório do JaCoCo, `integrationTest` quando a fase mexe em banco). Depois do checkpoint, a próxima fase só começa com a aprovação do usuário.
 
 - [x] Fase 1: Cadastros opcionais e migração V4 (Solo, Cultura e Área), com a revisão dos testes afetados (A-01)
-- [ ] Fase 2: Value objects, `WaterBalanceCalculator` puro e `PresentationRounding`
+- [x] Fase 2: Value objects, `WaterBalanceCalculator` puro e `PresentationRounding`
 - [ ] Fase 3: Plano de Manejo, meteorologia e Irrigação Real (migração V5, domínio, persistência e serviços)
 - [ ] Fase 4: Balanço diário imutável (migração V6), cálculo, reprocessamento e consulta (domínio, persistência e serviços)
 - [ ] Fase 5: Controladores, DTOs, tratamento de erros e OpenAPI
@@ -111,8 +111,8 @@ O plano tem 7 fases, na ordem do item 8 do `requirements.md` e do "Plano de entr
 
 **Fase 2: Value objects, calculador puro e arredondamento de apresentação**
 
-- [ ] 6. Value objects do módulo
-  - [ ] 6.1 Criar os value objects em `domain.model.valueobjects`
+- [x] 6. Value objects do módulo
+  - [x] 6.1 Criar os value objects em `domain.model.valueobjects`
     - `AvailabilityFactor` (F): maior que 0 e no máximo 1, até 4 casas, nunca dividido por 100
     - `SprinklerRate`: maior que 0 e no máximo 500 mm/h, até 4 casas
     - `EtpDepth`, `PrecipitationDepth` e `AppliedIrrigationDepth`: 0 a 1.000 mm inclusive, até 2 casas (três tipos, para a mensagem citar o campo certo)
@@ -120,71 +120,71 @@ O plano tem 7 fases, na ordem do item 8 do `requirements.md` e do "Plano de entr
     - Records validados, com `IllegalArgumentException` fora da faixa, como `Kc` e `BulkDensity`
     - _Requisitos: 4.3, 4.4, 5.2, 6.3, 7.4, 10.6_
 
-- [ ] 7. Calculador de domínio e política de apresentação
-  - [ ] 7.1 Criar os tipos de `com.irrigation.domain.waterbalance`
+- [x] 7. Calculador de domínio e política de apresentação
+  - [x] 7.1 Criar os tipos de `com.irrigation.domain.waterbalance`
     - `WaterBalanceInputs` (ETP, P, IR, CC, PMP, D, Z, KC, F, Sprinkler_Rate, `firstDayOfPlan`, `previousAfdFinal`; combinação inválida lança `IllegalArgumentException` no construtor), `WaterBalanceResult` (ETc, CAD, AFDi, AFDf, I, `recommended`, `noRecommendationReason`, `operatingTimeHours`) e o enum `NoRecommendationReason` (`FIRST_DAY_OF_FIRST_CYCLE`)
     - Constantes `METHODOLOGY_ID = "WATER_BALANCE_AFD"` e `METHODOLOGY_VERSION = "1.0"`
     - Somente `BigDecimal`. Nenhuma dependência de Spring, Jakarta, Hibernate, Jackson, `domain.repository` nem `domain.calculation`
     - _Requisitos: 7.9, 7.10, 15.1_
-  - [ ] 7.2 Implementar `WaterBalanceCalculator`
+  - [x] 7.2 Implementar `WaterBalanceCalculator`
     - `ETc = KC × ETP`; `CAD = 0,01 × (CC − PMP) × D × Z`; `AFDi = CAD × F` no primeiro dia e `previousAfdFinal` nos demais; `AFDf = AFDi + (P + IR − ETc)` sem limitar; `I = AFDi − AFDf` com sinal
     - `recommended = (I > 0) E (não é o primeiro dia)`; `Operating_Time = I ÷ Sprinkler_Rate` com escala 10 e `HALF_EVEN` quando recomendado, zero caso contrário; motivo `FIRST_DAY_OF_FIRST_CYCLE` no primeiro dia, independentemente do sinal de I
     - Divisor zero lança `IllegalArgumentException` ("divisor inválido"). Sem arredondamento de ETc, CAD, AFDi, AFDf e I
     - _Requisitos: 7.1, 8.1, 8.2, 8.3, 8.5, 8.6, 9.1, 9.2, 9.3, 9.4, 9.5, 9.6, 10.1, 10.2, 15.1, 15.2, 15.3, 15.9, 15.10_
-  - [ ] 7.3 Implementar `PresentationRounding` em `application.waterbalance`
+  - [x] 7.3 Implementar `PresentationRounding` em `application.waterbalance`
     - mm com 2 casas `HALF_UP`; horas com 4 casas `HALF_UP`; minutos totais `round(horas × 60, HALF_UP)` a partir do valor persistido, distribuídos em horas inteiras e minutos de 0 a 59. Tipo de saída para o tempo de funcionamento (`hours`, `wholeHours`, `minutes`)
     - Nunca usado em cálculo
     - _Requisitos: 10.3, 15.4, 15.5, 15.6, 15.7, 15.8, 14.6_
-  - [ ] 7.4 Acrescentar regras de ArchUnit ao `ArchitectureTest`
+  - [x] 7.4 Acrescentar regras de ArchUnit ao `ArchitectureTest`
     - `domain.waterbalance` não depende de Spring, Jakarta, Hibernate, `..application..`, `..infrastructure..`, `..presentation..`, `..domain.repository..` nem `..domain.calculation..`
     - Nenhuma classe de `domain.waterbalance` usa `double` ou `float` em campos ou assinaturas públicas
     - Não remover nem enfraquecer nenhuma regra existente
     - _Requisitos: 7.10, 15.1, 16.7_
 
-- [ ] 8. Testes da Fase 2
-  - [ ] 8.1 Escrever testes de limites dos value objects
+- [x] 8. Testes da Fase 2
+  - [x] 8.1 Escrever testes de limites dos value objects
     - Estender `RangeSpec` e os testes parametrizados existentes para `GravimetricWaterContent`, `AvailabilityFactor`, `SprinklerRate`, `EtpDepth`, `PrecipitationDepth`, `AppliedIrrigationDepth` e `CycleDay` (limite inferior, limite superior, imediatamente fora, escala)
     - _Requisitos: 1.1, 4.3, 4.4, 5.2, 6.3, 7.4_
-  - [ ] 8.2 Escrever os testes dos Cenários A, B, C e E contra o calculador
+  - [x] 8.2 Escrever os testes dos Cenários A, B, C e E contra o calculador
     - Cenário A: CAD = 72 mm; AFDi do dia 1 = 36 mm; os 7 dias linha a linha (ETc, AFDi, AFDf, I, recomendado, tempo em horas, horas e minutos); dia 1 com `FIRST_DAY_OF_FIRST_CYCLE`; dia 4 com AFDi = 28; dias 3 e 5 com I negativo e tempo zero; dia 7 com 12 ÷ 6 = 2 h
     - Cenário B: F = 0,90, AFDi = 64,80, AFDf do dia 1 = 80,80 mantida acima do CAD e usada no dia 2
     - Cenário C: 12/6, 1/6, 7/6, 2,5/4 (37,5 min vira 38) e I não positivo
     - Cenário E: ETP do dia 2 de 6,25 para 7,50 gera AFDf = 26, I = 6, 1,0000 h; dia 3 com AFDi = 26 e AFDf = 27; dia 4 com AFDi = 27 e AFDf = 22. Valores comparados com `compareTo`, sem arredondamento intermediário
     - _Requisitos: 7.1, 8.1, 8.2, 8.3, 8.5, 9.2, 9.3, 9.4, 9.6, 10.1, 10.3, 15.2, 15.6_
-  - [ ] 8.3 Escrever testes unitários de casos de borda do calculador e do arredondamento
+  - [x] 8.3 Escrever testes unitários de casos de borda do calculador e do arredondamento
     - Combinação inválida de `WaterBalanceInputs`; divisor zero; carry de 59,6 minutos para 1 h 00 min; `HALF_UP` para negativos em mm; I exatamente zero; segundo dia com I > 0 recomendado
     - _Requisitos: 9.3, 9.6, 10.3, 15.4, 15.6, 15.10_
-  - [ ] 8.4 Escrever teste de propriedade para as fórmulas exatas de ETc e CAD
+  - [x] 8.4 Escrever teste de propriedade para as fórmulas exatas de ETc e CAD
     - **Propriedade 1: Fórmulas exatas de ETc e CAD**
     - **Valida: Requisitos 7.1, 15.1, 15.2**
-  - [ ] 8.5 Escrever teste de propriedade para a conservação do saldo de água
+  - [x] 8.5 Escrever teste de propriedade para a conservação do saldo de água
     - **Propriedade 2: Conservação do saldo de água**
     - **Valida: Requisitos 8.5, 8.6, 9.1, 15.2**
-  - [ ] 8.6 Escrever teste de propriedade para a AFDi do primeiro dia
+  - [x] 8.6 Escrever teste de propriedade para a AFDi do primeiro dia
     - **Propriedade 3: AFDi do primeiro dia**
     - **Valida: Requisitos 8.1**
-  - [ ] 8.7 Escrever teste de propriedade para a continuidade da AFDi em sequências de dias
+  - [x] 8.7 Escrever teste de propriedade para a continuidade da AFDi em sequências de dias
     - **Propriedade 4: Continuidade da AFDi em sequências de dias**
     - **Valida: Requisitos 8.2, 8.3, 15.8**
     - Sequências de 1 a 30 dias com TR arbitrário, inclusive voltando a 1
-  - [ ] 8.8 Escrever teste de propriedade para a regra de recomendação
+  - [x] 8.8 Escrever teste de propriedade para a regra de recomendação
     - **Propriedade 5: Regra de recomendação**
     - **Valida: Requisitos 9.2, 9.3, 9.4, 9.5, 9.6, 10.2, 6.8**
-  - [ ] 8.9 Escrever teste de propriedade para o tempo de funcionamento
+  - [x] 8.9 Escrever teste de propriedade para o tempo de funcionamento
     - **Propriedade 6: Tempo de funcionamento**
     - **Valida: Requisitos 10.1, 15.3**
-  - [ ] 8.10 Escrever teste de propriedade para a conversão para horas e minutos
+  - [x] 8.10 Escrever teste de propriedade para a conversão para horas e minutos
     - **Propriedade 7: Conversão para horas e minutos**
     - **Valida: Requisitos 10.3, 15.6**
-  - [ ] 8.11 Escrever teste de propriedade para a política de apresentação consistente
+  - [x] 8.11 Escrever teste de propriedade para a política de apresentação consistente
     - **Propriedade 8: Política de apresentação consistente**
     - **Valida: Requisitos 15.4, 15.5, 15.7, 15.8, 14.6**
     - Inclui idempotência da política e a verificação de que o valor persistido não muda
-  - [ ] 8.12 Escrever teste de propriedade para o determinismo do calculador
+  - [x] 8.12 Escrever teste de propriedade para o determinismo do calculador
     - **Propriedade 9: Determinismo do calculador**
     - **Valida: Requisitos 15.9**
 
-- [ ] 9. Checkpoint da Fase 2: build, testes e relatórios
+- [x] 9. Checkpoint da Fase 2: build, testes e relatórios
   - Rodar `clean test jacocoTestCoverageVerification` (e `integrationTest` se o Docker estiver aberto) e conferir contagens nos XML, ausência de falhas e de testes pulados, e a cobertura de linha do JaCoCo (inclusive dos pacotes `domain.waterbalance` e `application.waterbalance`)
   - Informar o que foi feito, as decisões e as pendências. **Aguardar aprovação antes da Fase 3**
 

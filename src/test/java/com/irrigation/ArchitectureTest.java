@@ -1,6 +1,9 @@
 package com.irrigation;
 
+import com.tngtech.archunit.base.DescribedPredicate;
 import com.tngtech.archunit.core.domain.JavaClass;
+import com.tngtech.archunit.core.domain.JavaCodeUnit;
+import com.tngtech.archunit.core.domain.JavaModifier;
 import com.tngtech.archunit.core.importer.ImportOption;
 import com.tngtech.archunit.junit.AnalyzeClasses;
 import com.tngtech.archunit.junit.ArchTest;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Arrays;
+import java.util.Set;
 
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
@@ -70,4 +74,57 @@ class ArchitectureTest {
                             controller.getName() + (underApiV1 ? " está sob /api/v1" : " não está mapeado sob /api/v1")));
                 }
             });
-}
+
+    // ---- Módulo de balanço hídrico (Req 7.10, 15.1, 16.7) ----
+
+    private static final Set<String> FLOATING_POINT_TYPES =
+            Set.of("double", "float", "java.lang.Double", "java.lang.Float");
+
+    private static final DescribedPredicate<JavaClass> WATER_BALANCE_NUMERIC_CLASSES =
+            DescribedPredicate.describe(
+                    "classes de domain.waterbalance ou application.waterbalance.PresentationRounding",
+                    javaClass -> javaClass.getPackageName().startsWith("com.irrigation.domain.waterbalance")
+                            || javaClass.getName().equals("com.irrigation.application.waterbalance.PresentationRounding")
+                            || javaClass.getName().startsWith("com.irrigation.application.waterbalance.PresentationRounding$"));
+
+    @ArchTest
+    static final ArchRule waterBalanceDomainIsIndependent = noClasses()
+            .that().resideInAPackage("..domain.waterbalance..")
+            .should().dependOnClassesThat().resideInAnyPackage(
+                    "org.springframework..", "jakarta..", "org.hibernate..", "com.fasterxml..",
+                    "..application..", "..infrastructure..", "..presentation..",
+                    "..domain.repository..", "..domain.calculation..")
+            .as("o domínio do balanço hídrico não depende de frameworks, camadas externas, persistência nem do motor de cálculo");
+
+    @ArchTest
+    static final ArchRule waterBalanceUsesNoFloatingPoint = classes()
+            .that(WATER_BALANCE_NUMERIC_CLASSES)
+            .should(new ArchCondition<JavaClass>("não usar double nem float em campos ou assinaturas públicas") {
+                @Override
+                public void check(JavaClass javaClass, ConditionEvents events) {
+                    javaClass.getFields().forEach(field -> {
+                        String type = field.getRawType().getName();
+                        if (FLOATING_POINT_TYPES.contains(type)) {
+                            events.add(SimpleConditionEvent.violated(field,
+                                    "campo " + field.getFullName() + " usa " + type));
+                        }
+                    });
+                    javaClass.getCodeUnits().stream()
+                            .filter(unit -> unit.getModifiers().contains(JavaModifier.PUBLIC))
+                            .forEach(unit -> checkSignature(unit, events));
+                }
+
+                private void checkSignature(JavaCodeUnit unit, ConditionEvents events) {
+                    unit.getRawParameterTypes().forEach(parameter -> {
+                        if (FLOATING_POINT_TYPES.contains(parameter.getName())) {
+                            events.add(SimpleConditionEvent.violated(unit,
+                                    "parâmetro de " + unit.getFullName() + " usa " + parameter.getName()));
+                        }
+                    });
+                    String returnType = unit.getRawReturnType().getName();
+                    if (FLOATING_POINT_TYPES.contains(returnType)) {
+                        events.add(SimpleConditionEvent.violated(unit,
+                                "retorno de " + unit.getFullName() + " usa " + returnType));
+                    }
+                }
+            });}

@@ -198,6 +198,238 @@
         "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
         "timestamp": 1795111186596
       }
+    ],
+    "6.1 Criar os value objects em `domain.model.valueobjects`": [
+      {
+        "executionId": "20366f36-ced7-4eba-b387-6a59cc737ec5",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795119505992
+      },
+      {
+        "executionId": "20366f36-ced7-4eba-b387-6a59cc737ec5",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795119587640
+      }
+    ],
+    "6. Value objects do módulo": [
+      {
+        "executionId": "20366f36-ced7-4eba-b387-6a59cc737ec5",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795119588415
+      }
+    ],
+    "7.1 Criar os tipos de `com.irrigation.domain.waterbalance`": [
+      {
+        "executionId": "20366f36-ced7-4eba-b387-6a59cc737ec5",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795119589463
+      },
+      {
+        "executionId": "20366f36-ced7-4eba-b387-6a59cc737ec5",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795119674374
+      }
+    ],
+    "7.2 Implementar `WaterBalanceCalculator`": [
+      {
+        "executionId": "20366f36-ced7-4eba-b387-6a59cc737ec5",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795119674862
+      },
+      {
+        "executionId": "20366f36-ced7-4eba-b387-6a59cc737ec5",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795119778085
+      }
+    ],
+    "7.3 Implementar `PresentationRounding` em `application.waterbalance`": [
+      {
+        "executionId": "20366f36-ced7-4eba-b387-6a59cc737ec5",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795119778622
+      },
+      {
+        "executionId": "20366f36-ced7-4eba-b387-6a59cc737ec5",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795119836603
+      }
+    ],
+    "7.4 Acrescentar regras de ArchUnit ao `ArchitectureTest`": [
+      {
+        "executionId": "20366f36-ced7-4eba-b387-6a59cc737ec5",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795119837424
+      },
+      {
+        "executionId": "20366f36-ced7-4eba-b387-6a59cc737ec5",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795119931177
+      }
+    ],
+    "7. Calculador de domínio e política de apresentação": [
+      {
+        "executionId": "20366f36-ced7-4eba-b387-6a59cc737ec5",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795119931248
+      }
+    ],
+    "8.1 Escrever testes de limites dos value objects": [
+      {
+        "executionId": "20366f36-ced7-4eba-b387-6a59cc737ec5",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795119931492
+      },
+      {
+        "executionId": "20366f36-ced7-4eba-b387-6a59cc737ec5",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795120090928
+      }
+    ],
+    "8.2 Escrever os testes dos Cenários A, B, C e E contra o calculador": [
+      {
+        "executionId": "20366f36-ced7-4eba-b387-6a59cc737ec5",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795120091599
+      },
+      {
+        "executionId": "20366f36-ced7-4eba-b387-6a59cc737ec5",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795120246941
+      }
+    ],
+    "8.3 Escrever testes unitários de casos de borda do calculador e do arredondamento": [
+      {
+        "executionId": "20366f36-ced7-4eba-b387-6a59cc737ec5",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795120247095
+      },
+      {
+        "executionId": "20366f36-ced7-4eba-b387-6a59cc737ec5",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795120409859
+      }
+    ],
+    "8.4 Escrever teste de propriedade para as fórmulas exatas de ETc e CAD": [
+      {
+        "executionId": "20366f36-ced7-4eba-b387-6a59cc737ec5",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795120414016
+      },
+      {
+        "executionId": "20366f36-ced7-4eba-b387-6a59cc737ec5",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795120751439
+      }
+    ],
+    "8.5 Escrever teste de propriedade para a conservação do saldo de água": [
+      {
+        "executionId": "20366f36-ced7-4eba-b387-6a59cc737ec5",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795120414548
+      },
+      {
+        "executionId": "20366f36-ced7-4eba-b387-6a59cc737ec5",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795120751632
+      }
+    ],
+    "8.6 Escrever teste de propriedade para a AFDi do primeiro dia": [
+      {
+        "executionId": "20366f36-ced7-4eba-b387-6a59cc737ec5",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795120415663
+      },
+      {
+        "executionId": "20366f36-ced7-4eba-b387-6a59cc737ec5",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795120752687
+      }
+    ],
+    "8.7 Escrever teste de propriedade para a continuidade da AFDi em sequências de dias": [
+      {
+        "executionId": "20366f36-ced7-4eba-b387-6a59cc737ec5",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795120753613
+      },
+      {
+        "executionId": "20366f36-ced7-4eba-b387-6a59cc737ec5",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795121175241
+      }
+    ],
+    "8.8 Escrever teste de propriedade para a regra de recomendação": [
+      {
+        "executionId": "20366f36-ced7-4eba-b387-6a59cc737ec5",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795120754337
+      },
+      {
+        "executionId": "20366f36-ced7-4eba-b387-6a59cc737ec5",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795121176506
+      }
+    ],
+    "8.9 Escrever teste de propriedade para o tempo de funcionamento": [
+      {
+        "executionId": "20366f36-ced7-4eba-b387-6a59cc737ec5",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795120754896
+      },
+      {
+        "executionId": "20366f36-ced7-4eba-b387-6a59cc737ec5",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795121177759
+      }
+    ],
+    "8.10 Escrever teste de propriedade para a conversão para horas e minutos": [
+      {
+        "executionId": "20366f36-ced7-4eba-b387-6a59cc737ec5",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795121178422
+      },
+      {
+        "executionId": "20366f36-ced7-4eba-b387-6a59cc737ec5",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795121422648
+      }
+    ],
+    "8.11 Escrever teste de propriedade para a política de apresentação consistente": [
+      {
+        "executionId": "20366f36-ced7-4eba-b387-6a59cc737ec5",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795121180066
+      },
+      {
+        "executionId": "20366f36-ced7-4eba-b387-6a59cc737ec5",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795121424251
+      }
+    ],
+    "8.12 Escrever teste de propriedade para o determinismo do calculador": [
+      {
+        "executionId": "20366f36-ced7-4eba-b387-6a59cc737ec5",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795121180369
+      },
+      {
+        "executionId": "20366f36-ced7-4eba-b387-6a59cc737ec5",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795121425472
+      }
+    ],
+    "8. Testes da Fase 2": [
+      {
+        "executionId": "20366f36-ced7-4eba-b387-6a59cc737ec5",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795121425780
+      }
+    ],
+    "9. Checkpoint da Fase 2: build, testes e relatórios": [
+      {
+        "executionId": "20366f36-ced7-4eba-b387-6a59cc737ec5",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795121429137
+      }
     ]
   }
 }

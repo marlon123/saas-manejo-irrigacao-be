@@ -1,6 +1,12 @@
 package com.irrigation.support;
 
+import com.irrigation.domain.model.valueobjects.AppliedIrrigationDepth;
 import com.irrigation.domain.model.valueobjects.AreaInHectares;
+import com.irrigation.domain.model.valueobjects.AvailabilityFactor;
+import com.irrigation.domain.model.valueobjects.EtpDepth;
+import com.irrigation.domain.model.valueobjects.GravimetricWaterContent;
+import com.irrigation.domain.model.valueobjects.PrecipitationDepth;
+import com.irrigation.domain.model.valueobjects.SprinklerRate;
 import com.irrigation.domain.model.valueobjects.AvailableWater;
 import com.irrigation.domain.model.valueobjects.BulkDensity;
 import com.irrigation.domain.model.valueobjects.FlowRate;
@@ -73,5 +79,12 @@ public record RangeSpec(
             new RangeSpec("RootDepth", RootDepth::new, d("0"), false, d("5000.00")),
             new RangeSpec("VolumetricWaterContent", VolumetricWaterContent::new, d("0"), true, d("1")),
             new RangeSpec("IrrigationEfficiency", IrrigationEfficiency::new, d("0.01"), true, d("1")),
-            new RangeSpec("AvailableWater", AvailableWater::new, d("0"), true, null));
+            new RangeSpec("AvailableWater", AvailableWater::new, d("0"), true, null),
+            // Módulo de balanço hídrico (Req 1.2, 4.3, 4.4, 5.2, 6.3)
+            new RangeSpec("GravimetricWaterContent", GravimetricWaterContent::new, d("0"), true, d("100")),
+            new RangeSpec("AvailabilityFactor", AvailabilityFactor::new, d("0"), false, d("1")),
+            new RangeSpec("SprinklerRate", SprinklerRate::new, d("0"), false, d("500")),
+            new RangeSpec("EtpDepth", EtpDepth::new, d("0"), true, d("1000")),
+            new RangeSpec("PrecipitationDepth", PrecipitationDepth::new, d("0"), true, d("1000")),
+            new RangeSpec("AppliedIrrigationDepth", AppliedIrrigationDepth::new, d("0"), true, d("1000")));
 }
