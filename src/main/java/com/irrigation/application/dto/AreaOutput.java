@@ -7,7 +7,8 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 /**
- * Representação de saída de uma área.
+ * Representação de saída de uma área. Área em hectares, tipo de sistema e vazão são nulos quando não
+ * informados (Req 3.1).
  */
 public record AreaOutput(
         UUID id,
@@ -24,12 +25,12 @@ public record AreaOutput(
         return new AreaOutput(
                 area.getId(),
                 area.getName(),
-                area.getAreaHectares().value(),
+                area.getAreaHectares() == null ? null : area.getAreaHectares().value(),
                 area.getGeographicLocation() != null ? area.getGeographicLocation().latitude() : null,
                 area.getGeographicLocation() != null ? area.getGeographicLocation().longitude() : null,
                 area.getGeneralCharacteristics(),
                 area.getIrrigationSystemType(),
-                area.getSystemFlowRate().value(),
+                area.getSystemFlowRate() == null ? null : area.getSystemFlowRate().value(),
                 area.getIrrigationEfficiency() != null ? area.getIrrigationEfficiency().value() : null);
     }
 }

@@ -72,7 +72,8 @@ class SoilProfileControllerTest {
     }
 
     @Test
-    void createRejectsOutOfRangeValuesAndMissingUnits() throws Exception {
+    void createRejectsOutOfRangeValues() throws Exception {
+        // Revisão A-01 (Req 1.6): as quatro unidades deixaram de ser obrigatórias, então não são mais violações.
         String body = """
                 {"soilType":"","fieldCapacity":1.5,"permanentWiltingPoint":0.1,"bulkDensity":0,
                  "effectiveRootDepth":9999,"availableWater":-1}""";
@@ -81,8 +82,7 @@ class SoilProfileControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentTypeCompatibleWith(PROBLEM))
                 .andExpect(jsonPath("$.violations[*].field", hasItems(
-                        "soilType", "fieldCapacity", "bulkDensity", "effectiveRootDepth", "availableWater",
-                        "soilWaterUnit", "bulkDensityUnit", "rootDepthUnit", "availableWaterUnit")));
+                        "soilType", "fieldCapacity", "bulkDensity", "effectiveRootDepth", "availableWater")));
     }
 
     @Test

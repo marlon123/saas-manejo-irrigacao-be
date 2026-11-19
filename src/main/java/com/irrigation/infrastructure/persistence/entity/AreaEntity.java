@@ -25,7 +25,7 @@ public class AreaEntity {
     @Column(name = "name", nullable = false, length = 255)
     private String name;
 
-    @Column(name = "area_ha", nullable = false)
+    @Column(name = "area_ha")
     private BigDecimal areaHectares;
 
     @Column(name = "latitude")
@@ -38,10 +38,10 @@ public class AreaEntity {
     private String generalCharacteristics;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "irrigation_system_type", nullable = false, length = 50)
+    @Column(name = "irrigation_system_type", length = 50)
     private IrrigationSystemType irrigationSystemType;
 
-    @Column(name = "system_flow_rate", nullable = false)
+    @Column(name = "system_flow_rate")
     private BigDecimal systemFlowRate;
 
     @Column(name = "irrigation_efficiency")

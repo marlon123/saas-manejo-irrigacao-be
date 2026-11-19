@@ -10,6 +10,7 @@ import com.irrigation.domain.exception.EntityNotFoundException;
 import com.irrigation.domain.model.Crop;
 import com.irrigation.domain.model.CropStage;
 import com.irrigation.domain.model.valueobjects.Kc;
+import com.irrigation.domain.model.valueobjects.RootDepth;
 import com.irrigation.domain.repository.CropRepository;
 import com.irrigation.domain.repository.PageRequest;
 import org.slf4j.Logger;
@@ -29,6 +30,7 @@ public class CropService {
 
     private static final Logger log = LoggerFactory.getLogger(CropService.class);
     private static final String ENTITY = "Cultura";
+    private static final int MAX_STAGES = 20;
 
     private final CropRepository crops;
 
@@ -78,18 +80,32 @@ public class CropService {
         ViolationCollector v = new ViolationCollector();
         v.check("name", () -> Crop.validateName(in.name()));
         v.check("variety", () -> Crop.validateVariety(in.variety()));
+        // Req 2.10: KC e Z são obrigatórios na API; faixa e escala (até 2 casas, A-08) vêm do domínio.
+        Kc kc = v.build("kc", in.kc(), Kc::new);
+        if (kc != null) {
+            Kc validKc = kc;
+            if (!v.check("kc", () -> Crop.validateKc(validKc))) {
+                kc = null;
+            }
+        }
+        RootDepth rootDepth = v.build("rootDepthMm", in.rootDepth(), RootDepth::new);
+        if (rootDepth != null) {
+            RootDepth validDepth = rootDepth;
+            if (!v.check("rootDepthMm", () -> Crop.validateRootDepth(validDepth))) {
+                rootDepth = null;
+            }
+        }
         List<CropStage> stages = buildStages(v, in.stages());
 
         // Todas as regras já foram verificadas campo a campo; sem violações, o agregado é construído.
         v.throwIfAny();
-        return new Crop(id, in.name(), in.variety(), in.cultivationCycleDays(), stages);
+        return new Crop(id, in.name(), in.variety(), in.cultivationCycleDays(), stages, kc, rootDepth);
     }
 
     private List<CropStage> buildStages(ViolationCollector v, List<CropStageInput> inputs) {
         List<CropStage> stages = new ArrayList<>();
         if (inputs == null || inputs.isEmpty()) {
-            // sem estágios: o domínio reporta a mensagem de "pelo menos um estágio"
-            v.check("stages", () -> Crop.validateStages(List.of()));
+            // Req 2.4, 2.5: zero estágios é aceito
             return stages;
         }
         boolean allBuilt = true;
@@ -113,9 +129,12 @@ public class CropService {
                 allBuilt = false;
             }
         }
-        // Regras da coleção (1..20 estágios, ordem única) só fazem sentido com todos os estágios válidos.
+        // Regras da coleção (no máximo 20 estágios, ordem única) só fazem sentido com todos os estágios válidos.
         if (allBuilt) {
             v.check("stages", () -> Crop.validateStages(stages));
+        } else if (inputs.size() > MAX_STAGES) {
+            // Req 2.11: o limite vale mesmo quando outros estágios têm erros
+            v.add("stages", "a cultura deve conter no máximo " + MAX_STAGES + " estágios");
         }
         return stages;
     }

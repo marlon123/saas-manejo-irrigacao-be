@@ -100,9 +100,11 @@ public class AreaService {
     private Area buildArea(UUID id, AreaInput in) {
         ViolationCollector v = new ViolationCollector();
         v.check("name", () -> Area.validateName(in.name()));
-        AreaInHectares hectares = v.build("areaHectares", in.areaHectares(), AreaInHectares::new);
-        FlowRate flowRate = v.build("systemFlowRate", in.systemFlowRate(), FlowRate::new);
-        IrrigationSystemType type = v.require("irrigationSystemType", in.irrigationSystemType());
+        // Req 3.1: só o nome é obrigatório; área, vazão e tipo de sistema omitidos ficam ausentes.
+        // Valores presentes seguem validados (Req 3.2, 3.3).
+        AreaInHectares hectares = v.buildOptional("areaHectares", in.areaHectares(), AreaInHectares::new);
+        FlowRate flowRate = v.buildOptional("systemFlowRate", in.systemFlowRate(), FlowRate::new);
+        IrrigationSystemType type = in.irrigationSystemType();
         IrrigationEfficiency efficiency =
                 v.buildOptional("irrigationEfficiency", in.irrigationEfficiency(), IrrigationEfficiency::new);
         GeographicLocation location = buildLocation(v, in.latitude(), in.longitude());

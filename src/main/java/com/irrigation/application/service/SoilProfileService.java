@@ -7,9 +7,9 @@ import com.irrigation.application.pagination.PagedResult;
 import com.irrigation.application.validation.ViolationCollector;
 import com.irrigation.domain.exception.EntityNotFoundException;
 import com.irrigation.domain.model.SoilProfile;
-import com.irrigation.domain.model.enums.MeasurementUnit;
 import com.irrigation.domain.model.valueobjects.AvailableWater;
 import com.irrigation.domain.model.valueobjects.BulkDensity;
+import com.irrigation.domain.model.valueobjects.GravimetricWaterContent;
 import com.irrigation.domain.model.valueobjects.RootDepth;
 import com.irrigation.domain.model.valueobjects.VolumetricWaterContent;
 import com.irrigation.domain.repository.PageRequest;
@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 /**
@@ -77,25 +78,53 @@ public class SoilProfileService {
     private SoilProfile buildSoilProfile(UUID id, SoilProfileInput in) {
         ViolationCollector v = new ViolationCollector();
         v.check("soilType", () -> SoilProfile.validateSoilType(in.soilType()));
-        VolumetricWaterContent fieldCapacity = v.build("fieldCapacity", in.fieldCapacity(), VolumetricWaterContent::new);
+        // Par volumétrico (Req 1.7, 1.8): ambos ou nenhum.
+        VolumetricWaterContent fieldCapacity =
+                v.buildOptional("fieldCapacity", in.fieldCapacity(), VolumetricWaterContent::new);
         VolumetricWaterContent wiltingPoint =
-                v.build("permanentWiltingPoint", in.permanentWiltingPoint(), VolumetricWaterContent::new);
+                v.buildOptional("permanentWiltingPoint", in.permanentWiltingPoint(), VolumetricWaterContent::new);
+        // Par gravimétrico (Req 1.2, 1.9, A-07, A-08): ambos ou nenhum, CC > PMP e até 2 casas decimais.
+        GravimetricWaterContent fieldCapacityGravimetric = v.buildOptional(
+                "fieldCapacityGravimetricPct", in.fieldCapacityGravimetric(), GravimetricWaterContent::new);
+        GravimetricWaterContent wiltingPointGravimetric = v.buildOptional(
+                "permanentWiltingPointGravimetricPct", in.permanentWiltingPointGravimetric(),
+                GravimetricWaterContent::new);
         BulkDensity bulkDensity = v.build("bulkDensity", in.bulkDensity(), BulkDensity::new);
-        RootDepth rootDepth = v.build("effectiveRootDepth", in.effectiveRootDepth(), RootDepth::new);
-        AvailableWater availableWater = v.build("availableWater", in.availableWater(), AvailableWater::new);
-        MeasurementUnit soilWaterUnit = v.require("soilWaterUnit", in.soilWaterUnit());
-        MeasurementUnit bulkDensityUnit = v.require("bulkDensityUnit", in.bulkDensityUnit());
-        MeasurementUnit rootDepthUnit = v.require("rootDepthUnit", in.rootDepthUnit());
-        MeasurementUnit availableWaterUnit = v.require("availableWaterUnit", in.availableWaterUnit());
+        RootDepth rootDepth = v.buildOptional("effectiveRootDepth", in.effectiveRootDepth(), RootDepth::new);
+        AvailableWater availableWater =
+                v.buildOptional("availableWater", in.availableWater(), AvailableWater::new);
 
-        if (fieldCapacity != null && wiltingPoint != null) {
-            // Req 3.11 — só avaliável quando ambos os valores individuais são válidos
-            v.check("fieldCapacity", () -> SoilProfile.validateWaterContents(fieldCapacity, wiltingPoint));
-        }
+        checkPair(v, "fieldCapacity", in.fieldCapacity(), "permanentWiltingPoint", in.permanentWiltingPoint(),
+                () -> SoilProfile.validateWaterContents(fieldCapacity, wiltingPoint),
+                fieldCapacity != null && wiltingPoint != null);
+        checkPair(v, "fieldCapacityGravimetricPct", in.fieldCapacityGravimetric(),
+                "permanentWiltingPointGravimetricPct", in.permanentWiltingPointGravimetric(),
+                () -> SoilProfile.validateGravimetricContents(fieldCapacityGravimetric, wiltingPointGravimetric),
+                fieldCapacityGravimetric != null && wiltingPointGravimetric != null);
 
         // Todas as regras já foram verificadas campo a campo; sem violações, o agregado é construído.
         v.throwIfAny();
-        return new SoilProfile(id, in.soilType(), fieldCapacity, wiltingPoint, bulkDensity, rootDepth, availableWater,
-                soilWaterUnit, bulkDensityUnit, rootDepthUnit, availableWaterUnit);
+        return new SoilProfile(id, in.soilType(), fieldCapacity, wiltingPoint, fieldCapacityGravimetric,
+                wiltingPointGravimetric, bulkDensity, rootDepth, availableWater, in.soilWaterUnit(),
+                in.bulkDensityUnit(), in.rootDepthUnit(), in.availableWaterUnit());
+    }
+
+    /**
+     * Valida um par "ambos ou nenhum" com CC maior que PMP. O par incompleto é decidido pelos valores brutos
+     * (um valor presente e inválido já gerou a própria violação) e é reportado nos dois campos do par.
+     * A relação CC &gt; PMP só é avaliada quando os dois valores individuais são válidos.
+     */
+    private static void checkPair(ViolationCollector v, String fieldCapacityName, BigDecimal rawFieldCapacity,
+                                  String wiltingPointName, BigDecimal rawWiltingPoint,
+                                  Runnable relationCheck, boolean bothValid) {
+        if ((rawFieldCapacity == null) != (rawWiltingPoint == null)) {
+            String message = "par incompleto: " + fieldCapacityName + " e " + wiltingPointName
+                    + " devem ser informados em conjunto";
+            v.add(fieldCapacityName, message);
+            v.add(wiltingPointName, message);
+        } else if (bothValid) {
+            // Req 1.9: CC deve ser maior que PMP
+            v.check(fieldCapacityName, relationCheck);
+        }
     }
 }

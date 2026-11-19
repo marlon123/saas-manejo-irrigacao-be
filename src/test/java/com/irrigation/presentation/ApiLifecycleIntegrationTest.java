@@ -45,12 +45,13 @@ class ApiLifecycleIntegrationTest extends PostgresIntegrationTest {
 
     private static final String CROP = """
             {"name":"Milho","variety":"Híbrido","cultivationCycleDays":120,"stages":[
-              {"name":"Inicial","kc":0.4,"stageOrder":1},{"name":"Pleno","kc":1.15,"stageOrder":2}]}""";
+              {"name":"Inicial","kc":0.4,"stageOrder":1},{"name":"Pleno","kc":1.15,"stageOrder":2}],"kc":1.0,"rootDepthMm":400}""";
+    // Revisão A-01 (Req 2.10): kc e rootDepthMm passaram a ser obrigatórios no corpo de cultura (CROP e CROP_UPDATED).
     /** Reutiliza as ordens 1 e 2 com outros estágios: depende da constraint DEFERRABLE (V2). */
     private static final String CROP_UPDATED = """
             {"name":"Milho safrinha","variety":"Híbrido","cultivationCycleDays":110,"stages":[
               {"name":"Vegetativo","kc":0.7,"stageOrder":1},{"name":"Reprodutivo","kc":1.2,"stageOrder":2},
-              {"name":"Maturação","kc":0.6,"stageOrder":3}]}""";
+              {"name":"Maturação","kc":0.6,"stageOrder":3}],"kc":1.0,"rootDepthMm":400}""";
 
     private static final String SOIL = """
             {"soilType":"Argiloso","fieldCapacity":0.35,"permanentWiltingPoint":0.18,"bulkDensity":1.3,

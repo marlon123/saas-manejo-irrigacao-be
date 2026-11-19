@@ -12,6 +12,9 @@ import java.util.UUID;
 /**
  * Aggregate root representando uma área de cultivo.
  * (Req 1.12–1.16) — invariantes aplicados na construção.
+ * Somente o nome é obrigatório; {@code areaHectares}, {@code irrigationSystemType} e
+ * {@code systemFlowRate} aceitam nulo (Req 3.1) e, quando presentes, são validados pelos
+ * value objects (maior que zero e no máximo 1.000.000,00, Req 3.2).
  */
 public class Area {
 
@@ -36,11 +39,13 @@ public class Area {
 
         this.id = Objects.requireNonNull(id, "id não pode ser nulo");
         setName(name);
-        this.areaHectares = Objects.requireNonNull(areaHectares, "área em hectares não pode ser nula");
+        // Req 3.1: área, tipo de sistema e vazão são opcionais (nulo = não informado).
+        // Valores presentes já chegam validados pelos value objects (Req 3.2).
+        this.areaHectares = areaHectares;
         this.geographicLocation = geographicLocation;
         this.generalCharacteristics = generalCharacteristics;
-        this.irrigationSystemType = Objects.requireNonNull(irrigationSystemType, "tipo de sistema de irrigação não pode ser nulo");
-        this.systemFlowRate = Objects.requireNonNull(systemFlowRate, "vazão do sistema não pode ser nula");
+        this.irrigationSystemType = irrigationSystemType;
+        this.systemFlowRate = systemFlowRate;
         this.irrigationEfficiency = irrigationEfficiency;
     }
 
@@ -52,11 +57,11 @@ public class Area {
                         String generalCharacteristics, IrrigationSystemType irrigationSystemType,
                         FlowRate systemFlowRate, IrrigationEfficiency irrigationEfficiency) {
         setName(name);
-        this.areaHectares = Objects.requireNonNull(areaHectares, "área em hectares não pode ser nula");
+        this.areaHectares = areaHectares;
         this.geographicLocation = geographicLocation;
         this.generalCharacteristics = generalCharacteristics;
-        this.irrigationSystemType = Objects.requireNonNull(irrigationSystemType, "tipo de sistema de irrigação não pode ser nulo");
-        this.systemFlowRate = Objects.requireNonNull(systemFlowRate, "vazão do sistema não pode ser nula");
+        this.irrigationSystemType = irrigationSystemType;
+        this.systemFlowRate = systemFlowRate;
         this.irrigationEfficiency = irrigationEfficiency;
     }
 

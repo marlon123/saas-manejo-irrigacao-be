@@ -68,7 +68,8 @@ public final class TestData {
     public static CropInput cropInput() {
         return new CropInput("Milho", "Híbrido", 120, List.of(
                 new CropStageInput("Inicial", bd("0.40"), 1),
-                new CropStageInput("Pleno", bd("1.15"), 2)));
+                new CropStageInput("Pleno", bd("1.15"), 2)), bd("1.00"), bd("400"));
+        // Revisão A-01 (Req 2.10): kc e rootDepth passaram a ser obrigatórios na API de cultura.
     }
 
     // ---------------------------------------------------------------- Solo

@@ -3,6 +3,7 @@ package com.irrigation.infrastructure.persistence.mapper;
 import com.irrigation.domain.model.Crop;
 import com.irrigation.domain.model.CropStage;
 import com.irrigation.domain.model.valueobjects.Kc;
+import com.irrigation.domain.model.valueobjects.RootDepth;
 import com.irrigation.infrastructure.persistence.entity.CropEntity;
 import com.irrigation.infrastructure.persistence.entity.CropStageEntity;
 import org.springframework.stereotype.Component;
@@ -25,7 +26,9 @@ public class CropPersistenceMapper {
                 .map(s -> new CropStage(s.getName(), new Kc(s.getKc()), s.getStageOrder()))
                 .toList();
         return new Crop(entity.getId(), entity.getName(), entity.getVariety(),
-                entity.getCultivationCycleDays(), stages);
+                entity.getCultivationCycleDays(), stages,
+                entity.getKc() != null ? new Kc(entity.getKc()) : null,
+                entity.getRootDepthMm() != null ? new RootDepth(entity.getRootDepthMm()) : null);
     }
 
     public CropEntity toEntity(Crop crop) {
@@ -34,6 +37,8 @@ public class CropPersistenceMapper {
         entity.setName(crop.getName());
         entity.setVariety(crop.getVariety());
         entity.setCultivationCycleDays(crop.getCultivationCycleDays());
+        entity.setKc(crop.getKc() != null ? crop.getKc().value() : null);
+        entity.setRootDepthMm(crop.getRootDepth() != null ? crop.getRootDepth().value() : null);
         for (CropStage stage : crop.getStages()) {
             CropStageEntity stageEntity = CropStageEntity.newInstance();
             stageEntity.setId(UUID.randomUUID());

@@ -227,9 +227,10 @@ class DomainPropertiesTest {
     }
 
     // Feature: irrigation-management-backend, Property 3: estágios de Crop
+    // Revisão A-01 (Req 2.5): a faixa passou de 1..20 para 0..20 estágios; a lista vazia deixou de ser rejeitada.
     @Property
-    void cropAcceptsOneToTwentyStagesWithUniquePositiveOrder(@ForAll("stageOrders") List<Integer> orders) {
-        boolean expected = !orders.isEmpty() && orders.size() <= 20
+    void cropAcceptsZeroToTwentyStagesWithUniquePositiveOrder(@ForAll("stageOrders") List<Integer> orders) {
+        boolean expected = orders.size() <= 20
                 && orders.stream().allMatch(o -> o > 0)
                 && new HashSet<>(orders).size() == orders.size();
         boolean built;
@@ -285,11 +286,16 @@ class DomainPropertiesTest {
     // =====================================================================================
 
     // Feature: irrigation-management-backend, Property 5: unidades explícitas
+    // Revisão A-01 (Req 1.6): unidades deixaram de ser obrigatórias; a ausência de qualquer uma passou a ser aceita
+    // e as demais permanecem como informadas (antes: NullPointerException).
     @Property
-    void soilProfileRejectsAnyMissingUnit(@ForAll @IntRange(min = 0, max = 3) int missingIndex) {
+    void soilProfileAcceptsAnyMissingUnit(@ForAll @IntRange(min = 0, max = 3) int missingIndex) {
         MeasurementUnit[] units = allUnits();
         units[missingIndex] = null;
-        assertThatThrownBy(() -> soil(bd("0.35"), bd("0.15"), units)).isInstanceOf(NullPointerException.class);
+        SoilProfile profile = soil(bd("0.35"), bd("0.15"), units);
+        MeasurementUnit[] actual = {profile.getSoilWaterUnit(), profile.getBulkDensityUnit(),
+                profile.getRootDepthUnit(), profile.getAvailableWaterUnit()};
+        assertThat(actual).containsExactly(units);
     }
 
     // Feature: irrigation-management-backend, Property 5: perfil completo é aceito

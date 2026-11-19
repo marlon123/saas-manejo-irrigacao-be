@@ -43,7 +43,9 @@ class CropControllerTest {
     private static final String VALID_BODY = """
             {"name":"Milho","variety":"Híbrido","cultivationCycleDays":120,
              "stages":[{"name":"Inicial","kc":0.40,"stageOrder":1},
-                       {"name":"Pleno","kc":1.15,"stageOrder":2}]}""";
+                       {"name":"Pleno","kc":1.15,"stageOrder":2}],
+             "kc":1.0,"rootDepthMm":400}""";
+    // Revisão A-01 (Req 2.10): kc e rootDepthMm passaram a ser obrigatórios no corpo de cultura.
 
     @Autowired
     MockMvc mvc;
@@ -82,10 +84,11 @@ class CropControllerTest {
     }
 
     @Test
-    void createRejectsAMissingStageList() throws Exception {
+    void createRejectsAMissingKcAndRootDepth() throws Exception {
+        // Revisão A-01 (Req 2.5, 2.10): a lista de estágios deixou de ser obrigatória; o que falta agora é kc e Z.
         mvc.perform(post("/api/v1/crops").contentType(MediaType.APPLICATION_JSON).content("{\"name\":\"Milho\"}"))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.violations[*].field", hasItems("stages")));
+                .andExpect(jsonPath("$.violations[*].field", hasItems("kc", "rootDepthMm")));
     }
 
     @Test

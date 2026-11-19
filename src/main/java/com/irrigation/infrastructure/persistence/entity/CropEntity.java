@@ -8,6 +8,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -30,6 +31,12 @@ public class CropEntity {
 
     @Column(name = "cultivation_cycle_days")
     private Integer cultivationCycleDays;
+
+    @Column(name = "kc")
+    private BigDecimal kc;
+
+    @Column(name = "root_depth_mm")
+    private BigDecimal rootDepthMm;
 
     @OneToMany(mappedBy = "crop", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("stageOrder ASC")
@@ -56,5 +63,9 @@ public class CropEntity {
     public void setVariety(String variety) { this.variety = variety; }
     public Integer getCultivationCycleDays() { return cultivationCycleDays; }
     public void setCultivationCycleDays(Integer cultivationCycleDays) { this.cultivationCycleDays = cultivationCycleDays; }
+    public BigDecimal getKc() { return kc; }
+    public void setKc(BigDecimal kc) { this.kc = kc; }
+    public BigDecimal getRootDepthMm() { return rootDepthMm; }
+    public void setRootDepthMm(BigDecimal rootDepthMm) { this.rootDepthMm = rootDepthMm; }
     public List<CropStageEntity> getStages() { return stages; }
 }

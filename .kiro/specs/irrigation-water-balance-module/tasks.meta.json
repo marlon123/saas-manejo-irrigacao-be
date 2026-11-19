@@ -1,0 +1,203 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "1.1 Criar `src/main/resources/db/migration/V4__water_balance_optional_fields.sql`": [
+      {
+        "executionId": "07ee65c4-2c3f-45c9-9bc5-6f62abcd033f",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795107227195
+      },
+      {
+        "executionId": "07ee65c4-2c3f-45c9-9bc5-6f62abcd033f",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795107367928
+      }
+    ],
+    "2.1 Criar o value object `GravimetricWaterContent` e a regra de escala (A-08)": [
+      {
+        "executionId": "07ee65c4-2c3f-45c9-9bc5-6f62abcd033f",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795107228009
+      },
+      {
+        "executionId": "07ee65c4-2c3f-45c9-9bc5-6f62abcd033f",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795107368483
+      }
+    ],
+    "2.2 Alterar `SoilProfile`": [
+      {
+        "executionId": "07ee65c4-2c3f-45c9-9bc5-6f62abcd033f",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795107377033
+      },
+      {
+        "executionId": "07ee65c4-2c3f-45c9-9bc5-6f62abcd033f",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795107451648
+      }
+    ],
+    "2.3 Alterar `Crop`": [
+      {
+        "executionId": "07ee65c4-2c3f-45c9-9bc5-6f62abcd033f",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795107377378
+      },
+      {
+        "executionId": "07ee65c4-2c3f-45c9-9bc5-6f62abcd033f",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795107452009
+      }
+    ],
+    "2.4 Alterar `Area`": [
+      {
+        "executionId": "07ee65c4-2c3f-45c9-9bc5-6f62abcd033f",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795107377640
+      },
+      {
+        "executionId": "07ee65c4-2c3f-45c9-9bc5-6f62abcd033f",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795107452789
+      }
+    ],
+    "2. Domínio dos cadastros": [
+      {
+        "executionId": "07ee65c4-2c3f-45c9-9bc5-6f62abcd033f",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795107452916
+      }
+    ],
+    "1.2 Estender o teste de integração de migração com dados preexistentes": [
+      {
+        "executionId": "07ee65c4-2c3f-45c9-9bc5-6f62abcd033f",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795107458553
+      },
+      {
+        "executionId": "07ee65c4-2c3f-45c9-9bc5-6f62abcd033f",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795108045819
+      }
+    ],
+    "1. Migração V4 (relaxamento e colunas novas)": [
+      {
+        "executionId": "07ee65c4-2c3f-45c9-9bc5-6f62abcd033f",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795108046463
+      }
+    ],
+    "3.1 Atualizar entidades JPA e mapeadores manuais de solo, cultura e área": [
+      {
+        "executionId": "07ee65c4-2c3f-45c9-9bc5-6f62abcd033f",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795108053000
+      },
+      {
+        "executionId": "07ee65c4-2c3f-45c9-9bc5-6f62abcd033f",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795108239310
+      }
+    ],
+    "3.2 Ordenar áreas por `areaHectares` com `nullsLast`": [
+      {
+        "executionId": "07ee65c4-2c3f-45c9-9bc5-6f62abcd033f",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795108239942
+      },
+      {
+        "executionId": "07ee65c4-2c3f-45c9-9bc5-6f62abcd033f",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795108305435
+      }
+    ],
+    "3.3 Atualizar DTOs e serviços de aplicação de solo, cultura e área": [
+      {
+        "executionId": "07ee65c4-2c3f-45c9-9bc5-6f62abcd033f",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795108306975
+      },
+      {
+        "executionId": "07ee65c4-2c3f-45c9-9bc5-6f62abcd033f",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795109171713
+      }
+    ],
+    "3.4 Atualizar DTOs, MapStruct e anotações de Bean Validation da apresentação": [
+      {
+        "executionId": "07ee65c4-2c3f-45c9-9bc5-6f62abcd033f",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795109172776
+      },
+      {
+        "executionId": "07ee65c4-2c3f-45c9-9bc5-6f62abcd033f",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795109597819
+      }
+    ],
+    "3. Persistência, aplicação e apresentação dos cadastros": [
+      {
+        "executionId": "07ee65c4-2c3f-45c9-9bc5-6f62abcd033f",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795109597930
+      }
+    ],
+    "4.1 Revisar os testes existentes afetados (A-01)": [
+      {
+        "executionId": "07ee65c4-2c3f-45c9-9bc5-6f62abcd033f",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795109598087
+      }
+    ],
+    "4.2 Escrever testes unitários dos cadastros": [
+      {
+        "executionId": "07ee65c4-2c3f-45c9-9bc5-6f62abcd033f",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795110073819
+      },
+      {
+        "executionId": "07ee65c4-2c3f-45c9-9bc5-6f62abcd033f",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795110413218
+      }
+    ],
+    "4.3 Escrever teste de propriedade para pares de umidade e campos opcionais": [
+      {
+        "executionId": "07ee65c4-2c3f-45c9-9bc5-6f62abcd033f",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795110414203
+      },
+      {
+        "executionId": "07ee65c4-2c3f-45c9-9bc5-6f62abcd033f",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795110595651
+      }
+    ],
+    "4.4 Escrever testes dos mapeadores e de regressão de integração": [
+      {
+        "executionId": "07ee65c4-2c3f-45c9-9bc5-6f62abcd033f",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795110596242
+      },
+      {
+        "executionId": "07ee65c4-2c3f-45c9-9bc5-6f62abcd033f",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795111185304
+      }
+    ],
+    "4. Testes da Fase 1": [
+      {
+        "executionId": "07ee65c4-2c3f-45c9-9bc5-6f62abcd033f",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795111185755
+      }
+    ],
+    "5. Checkpoint da Fase 1: build, testes e relatórios": [
+      {
+        "executionId": "07ee65c4-2c3f-45c9-9bc5-6f62abcd033f",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795111186596
+      }
+    ]
+  }
+}

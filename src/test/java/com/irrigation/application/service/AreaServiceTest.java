@@ -85,11 +85,11 @@ class AreaServiceTest {
 
     @Test
     void createRejectsMissingRequiredFields() {
+        // Revisão A-01 (Req 3.1): área, vazão e tipo de sistema deixaram de ser obrigatórios; só o nome é.
         AreaInput empty = new AreaInput(null, null, null, null, null, null, null, null);
         assertThatThrownBy(() -> service.create(empty))
                 .isInstanceOfSatisfying(ValidationFailedException.class, e ->
-                        assertThat(fields(e)).containsExactlyInAnyOrder(
-                                "name", "areaHectares", "systemFlowRate", "irrigationSystemType"));
+                        assertThat(fields(e)).containsExactly("name"));
     }
 
     // ------------------------------------------------------------------ update

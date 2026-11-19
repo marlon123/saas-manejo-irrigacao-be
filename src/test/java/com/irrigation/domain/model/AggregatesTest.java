@@ -83,9 +83,10 @@ class AggregatesTest {
         }
 
         @Test
-        void rejectsEmptyStageList() {
-            assertThatThrownBy(() -> new Crop(UUID.randomUUID(), "Milho", null, null, List.of()))
-                    .isInstanceOf(IllegalArgumentException.class);
+        void acceptsEmptyStageList() {
+            // Revisão A-01 (Req 2.5): zero estágios passou a ser válido; antes a lista vazia era rejeitada.
+            assertThatCode(() -> new Crop(UUID.randomUUID(), "Milho", null, null, List.of()))
+                    .doesNotThrowAnyException();
         }
 
         @Test
@@ -166,8 +167,9 @@ class AggregatesTest {
         }
 
         @Test
-        void rejectsMissingUnit() {
-            assertThatThrownBy(() -> soil("0.30", "0.10", null)).isInstanceOf(NullPointerException.class);
+        void acceptsMissingUnit() {
+            // Revisão A-01 (Req 1.6): unidade ausente passou a ser válida; antes lançava NullPointerException.
+            assertThat(soil("0.30", "0.10", null).getSoilWaterUnit()).isNull();
         }
 
         @Test

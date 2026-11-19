@@ -6,6 +6,8 @@ import java.math.BigDecimal;
 
 /**
  * Dados de entrada para criar ou atualizar uma área (Req 1.1, 1.8).
+ * Somente o nome é obrigatório; área em hectares, tipo de sistema e vazão aceitam nulo (Req 3.1) e, quando
+ * presentes, são validados (Req 3.2).
  * Latitude e longitude são opcionais, mas devem ser informadas em conjunto (Req 1.16).
  */
 public record AreaInput(

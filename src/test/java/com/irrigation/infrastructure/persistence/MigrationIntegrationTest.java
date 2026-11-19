@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 /**
  * Migrações Flyway no PostgreSQL real (Req 8.1, 8.3, 8.5).
  *
- * <p>Subir o contexto da classe base já prova que V1 a V3 aplicam e que o mapeamento JPA
+ * <p>Subir o contexto da classe base já prova que V1 a V4 aplicam e que o mapeamento JPA
  * bate com o schema ({@code ddl-auto: validate}); aqui conferimos o resultado em detalhe.
  */
 class MigrationIntegrationTest extends PostgresIntegrationTest {
@@ -28,7 +28,7 @@ class MigrationIntegrationTest extends PostgresIntegrationTest {
         List<Map<String, Object>> history = jdbc.queryForList(
                 "SELECT version, success FROM flyway_schema_history WHERE version IS NOT NULL ORDER BY installed_rank");
 
-        assertThat(history).extracting(row -> row.get("version")).containsExactly("1", "2", "3");
+        assertThat(history).extracting(row -> row.get("version")).containsExactly("1", "2", "3", "4");
         assertThat(history).allSatisfy(row -> assertThat(row.get("success")).isEqualTo(true));
     }
 
@@ -42,9 +42,10 @@ class MigrationIntegrationTest extends PostgresIntegrationTest {
 
     @Test
     void v2AddedUnitColumnsToSoilProfiles() {
+        // A V4 relaxou o NOT NULL das unidades (Req 1.6); as colunas continuam existindo
         List<String> columns = jdbc.queryForList(
-                "SELECT column_name FROM information_schema.columns WHERE table_name = 'soil_profiles' "
-                        + "AND is_nullable = 'NO'", String.class);
+                "SELECT column_name FROM information_schema.columns WHERE table_name = 'soil_profiles'",
+                String.class);
 
         assertThat(columns).contains("soil_water_unit", "bulk_density_unit", "root_depth_unit", "available_water_unit");
     }
@@ -95,7 +96,7 @@ class MigrationIntegrationTest extends PostgresIntegrationTest {
                 .queryForList("SELECT version, success FROM flyway_schema_history WHERE version IS NOT NULL "
                         + "ORDER BY installed_rank");
         assertThat(history).filteredOn(row -> Boolean.TRUE.equals(row.get("success")))
-                .extracting(row -> row.get("version")).containsExactly("1", "2", "3");
+                .extracting(row -> row.get("version")).containsExactly("1", "2", "3", "4");
     }
 
     /** Junta as mensagens de toda a cadeia de causas. */

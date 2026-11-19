@@ -25,11 +25,11 @@ public class AreaPersistenceMapper {
         return new Area(
                 entity.getId(),
                 entity.getName(),
-                new AreaInHectares(entity.getAreaHectares()),
+                entity.getAreaHectares() != null ? new AreaInHectares(entity.getAreaHectares()) : null,
                 location,
                 entity.getGeneralCharacteristics(),
                 entity.getIrrigationSystemType(),
-                new FlowRate(entity.getSystemFlowRate()),
+                entity.getSystemFlowRate() != null ? new FlowRate(entity.getSystemFlowRate()) : null,
                 efficiency);
     }
 
@@ -37,14 +37,14 @@ public class AreaPersistenceMapper {
         AreaEntity entity = AreaEntity.newInstance();
         entity.setId(area.getId());
         entity.setName(area.getName());
-        entity.setAreaHectares(area.getAreaHectares().value());
+        entity.setAreaHectares(area.getAreaHectares() != null ? area.getAreaHectares().value() : null);
         if (area.getGeographicLocation() != null) {
             entity.setLatitude(area.getGeographicLocation().latitude());
             entity.setLongitude(area.getGeographicLocation().longitude());
         }
         entity.setGeneralCharacteristics(area.getGeneralCharacteristics());
         entity.setIrrigationSystemType(area.getIrrigationSystemType());
-        entity.setSystemFlowRate(area.getSystemFlowRate().value());
+        entity.setSystemFlowRate(area.getSystemFlowRate() != null ? area.getSystemFlowRate().value() : null);
         if (area.getIrrigationEfficiency() != null) {
             entity.setIrrigationEfficiency(area.getIrrigationEfficiency().value());
         }

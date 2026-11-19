@@ -6,7 +6,14 @@ import com.irrigation.domain.model.CropStage;
 import com.irrigation.domain.model.Recommendation;
 import com.irrigation.domain.model.SoilProfile;
 import com.irrigation.domain.model.enums.IrrigationSystemType;
+import com.irrigation.domain.model.enums.MeasurementUnit;
 import com.irrigation.domain.model.valueobjects.AreaInHectares;
+import com.irrigation.domain.model.valueobjects.AvailableWater;
+import com.irrigation.domain.model.valueobjects.BulkDensity;
+import com.irrigation.domain.model.valueobjects.GravimetricWaterContent;
+import com.irrigation.domain.model.valueobjects.RootDepth;
+import com.irrigation.domain.model.valueobjects.VolumetricWaterContent;
+import com.irrigation.domain.repository.PageRequest;
 import com.irrigation.domain.model.valueobjects.FlowRate;
 import com.irrigation.domain.model.valueobjects.GeographicLocation;
 import com.irrigation.domain.model.valueobjects.IrrigationEfficiency;
@@ -112,6 +119,134 @@ class RepositoryRoundTripIntegrationTest extends PostgresIntegrationTest {
         soilProfiles.save(soil);
 
         assertSameAggregate(soilProfiles.findById(soil.getId()).orElseThrow(), soil);
+    }
+
+    // =====================================================================================
+    // Módulo de balanço hídrico: campos nulos e campos novos (Req 1.10, 1.11, 2.7, 3.4, 16.1)
+    // =====================================================================================
+
+    @Test
+    void areaWithOnlyTheNameRoundTripsWithNullColumns() {
+        Area area = new Area(UUID.randomUUID(), "Só o nome", null, null, null, null, null, null);
+
+        areas.save(area);
+
+        assertSameAggregate(areas.findById(area.getId()).orElseThrow(), area);
+        Map<String, Object> row = jdbc.queryForMap(
+                "SELECT area_ha, irrigation_system_type, system_flow_rate FROM areas WHERE id = ?", area.getId());
+        assertThat(row.values()).containsOnlyNulls();
+    }
+
+    @Test
+    void cropWithKcAndRootDepthRoundTripsAndFillsTheNewColumns() {
+        Crop crop = new Crop(UUID.randomUUID(), "Milho", "Híbrido", 120,
+                List.of(new CropStage("Inicial", new Kc(bd("0.40")), 1)), new Kc(bd("1.15")), new RootDepth(bd("450.50")));
+
+        crops.save(crop);
+
+        assertSameAggregate(crops.findById(crop.getId()).orElseThrow(), crop);
+        Map<String, Object> row = jdbc.queryForMap("SELECT kc, root_depth_mm FROM crops WHERE id = ?", crop.getId());
+        assertThat((BigDecimal) row.get("kc")).isEqualByComparingTo("1.15");
+        assertThat((BigDecimal) row.get("root_depth_mm")).isEqualByComparingTo("450.50");
+    }
+
+    @Test
+    void cropWithZeroStagesRoundTripsAndStoresNoStageRows() {
+        Crop crop = new Crop(UUID.randomUUID(), "Sem estágios", null, null, List.of(),
+                new Kc(bd("1.00")), new RootDepth(bd("400")));
+
+        crops.save(crop);
+
+        Crop found = crops.findById(crop.getId()).orElseThrow();
+        assertThat(found.getStages()).isEmpty();
+        assertSameAggregate(found, crop);
+        assertThat(jdbc.queryForObject("SELECT count(*) FROM crop_stages WHERE crop_id = ?", Integer.class,
+                crop.getId())).isZero();
+    }
+
+    @Test
+    void replacingAllStagesByNoneAndBackSucceeds() {
+        Crop crop = TestData.crop();
+        crops.save(crop);
+
+        crop.update("Milho", "Híbrido", 120, List.of(), new Kc(bd("1.00")), new RootDepth(bd("400")));
+        crops.save(crop);
+        assertThat(crops.findById(crop.getId()).orElseThrow().getStages()).isEmpty();
+        assertThat(jdbc.queryForObject("SELECT count(*) FROM crop_stages WHERE crop_id = ?", Integer.class,
+                crop.getId())).isZero();
+
+        crop.update("Milho", "Híbrido", 120, List.of(new CropStage("Pleno", new Kc(bd("1.15")), 1)),
+                new Kc(bd("1.00")), new RootDepth(bd("400")));
+        crops.save(crop);
+        assertSameAggregate(crops.findById(crop.getId()).orElseThrow(), crop);
+    }
+
+    @Test
+    void soilProfileWithGravimetricPairRoundTripsAndFillsTheNewColumns() {
+        SoilProfile soil = new SoilProfile(UUID.randomUUID(), "Argiloso",
+                new VolumetricWaterContent(bd("0.35")), new VolumetricWaterContent(bd("0.18")),
+                new GravimetricWaterContent(bd("28.50")), new GravimetricWaterContent(bd("14.20")),
+                new BulkDensity(bd("1.30")), new RootDepth(bd("600.00")), new AvailableWater(bd("100.00")),
+                MeasurementUnit.VOLUMETRIC_WATER_CONTENT, MeasurementUnit.GRAMS_PER_CUBIC_CENTIMETER,
+                MeasurementUnit.MILLIMETERS, MeasurementUnit.MILLIMETERS);
+
+        soilProfiles.save(soil);
+
+        assertSameAggregate(soilProfiles.findById(soil.getId()).orElseThrow(), soil);
+        Map<String, Object> row = jdbc.queryForMap("SELECT field_capacity_gravimetric_pct AS fc, "
+                + "permanent_wilting_point_gravimetric_pct AS pwp FROM soil_profiles WHERE id = ?", soil.getId());
+        assertThat((BigDecimal) row.get("fc")).isEqualByComparingTo("28.50");
+        assertThat((BigDecimal) row.get("pwp")).isEqualByComparingTo("14.20");
+    }
+
+    @Test
+    void soilProfileWithOnlyTypeAndDensityRoundTripsWithNullColumns() {
+        SoilProfile soil = new SoilProfile(UUID.randomUUID(), "Mínimo", null, null, null, null,
+                new BulkDensity(bd("1.30")), null, null, null, null, null, null);
+
+        soilProfiles.save(soil);
+
+        SoilProfile found = soilProfiles.findById(soil.getId()).orElseThrow();
+        assertSameAggregate(found, soil);
+        assertThat(found.getFieldCapacity()).isNull();
+        assertThat(found.getFieldCapacityGravimetric()).isNull();
+        assertThat(found.getSoilWaterUnit()).isNull();
+    }
+
+    @Test
+    void updatingASoilProfileToDropTheOptionalFieldsPersistsNulls() {
+        SoilProfile soil = TestData.soilProfile();
+        soilProfiles.save(soil);
+
+        soil.update("Argiloso", null, null, null, null, new BulkDensity(bd("1.30")), null, null, null, null, null, null);
+        soilProfiles.save(soil);
+
+        assertSameAggregate(soilProfiles.findById(soil.getId()).orElseThrow(), soil);
+    }
+
+    /** Req 3.1 e 16.1: nulos no fim nas duas direções, e o desempate por id mantém a paginação estável. */
+    @Test
+    void areasSortedByHectaresPutNullsLastInBothDirections() {
+        Area small = TestData.area(UUID.randomUUID(), "Pequena", "5.00");
+        Area large = TestData.area(UUID.randomUUID(), "Grande", "50.00");
+        Area unknownA = new Area(UUID.randomUUID(), "Sem área A", null, null, null, null, null, null);
+        Area unknownB = new Area(UUID.randomUUID(), "Sem área B", null, null, null, null, null, null);
+        List.of(unknownA, large, unknownB, small).forEach(areas::save);
+
+        List<Area> ascending = areas.findAll(PageRequest.of(0, 10), "areaHectares", "asc");
+        List<Area> descending = areas.findAll(PageRequest.of(0, 10), "areaHectares", "desc");
+
+        assertThat(ascending).extracting(Area::getName).startsWith("Pequena", "Grande");
+        assertThat(ascending.subList(2, 4)).extracting(Area::getName)
+                .containsExactlyInAnyOrder("Sem área A", "Sem área B");
+        assertThat(descending).extracting(Area::getName).startsWith("Grande", "Pequena");
+        assertThat(descending.subList(2, 4)).extracting(Area::getName)
+                .containsExactlyInAnyOrder("Sem área A", "Sem área B");
+        // paginação: a segunda página (tamanho 2) só traz as áreas sem valor, nas duas direções
+        assertThat(areas.findAll(PageRequest.of(1, 2), "areaHectares", "asc")).extracting(Area::getName)
+                .containsExactlyInAnyOrder("Sem área A", "Sem área B");
+        assertThat(areas.findAll(PageRequest.of(1, 2), "areaHectares", "desc")).extracting(Area::getName)
+                .containsExactlyInAnyOrder("Sem área A", "Sem área B");
     }
 
     @Test

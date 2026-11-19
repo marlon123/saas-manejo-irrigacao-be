@@ -7,7 +7,13 @@ import com.irrigation.domain.model.CropStage;
 import com.irrigation.domain.model.Recommendation;
 import com.irrigation.domain.model.SoilProfile;
 import com.irrigation.domain.model.enums.IrrigationSystemType;
+import com.irrigation.domain.model.enums.MeasurementUnit;
 import com.irrigation.domain.model.valueobjects.AreaInHectares;
+import com.irrigation.domain.model.valueobjects.AvailableWater;
+import com.irrigation.domain.model.valueobjects.BulkDensity;
+import com.irrigation.domain.model.valueobjects.GravimetricWaterContent;
+import com.irrigation.domain.model.valueobjects.RootDepth;
+import com.irrigation.domain.model.valueobjects.VolumetricWaterContent;
 import com.irrigation.domain.model.valueobjects.CalculationInput;
 import com.irrigation.domain.model.valueobjects.FlowRate;
 import com.irrigation.domain.model.valueobjects.GeographicLocation;
@@ -151,6 +157,120 @@ class PersistenceMappersTest {
         assertThat(entity.getSoilWaterUnit()).isEqualTo(soil.getSoilWaterUnit());
         assertThat(entity.getAvailableWaterUnit()).isEqualTo(soil.getAvailableWaterUnit());
         assertSameAggregate(soilMapper.toDomain(entity), soil);
+    }
+
+    // =====================================================================================
+    // Módulo de balanço hídrico: campos nulos e campos novos (Req 1.10, 1.11, 2.7, 3.4)
+    // =====================================================================================
+
+    @Test
+    void areaWithOnlyTheNameMapsEveryOptionalColumnToNull() {
+        Area area = new Area(UUID.randomUUID(), "Só o nome", null, null, null, null, null, null);
+
+        AreaEntity entity = areaMapper.toEntity(area);
+
+        assertThat(entity.getAreaHectares()).isNull();
+        assertThat(entity.getIrrigationSystemType()).isNull();
+        assertThat(entity.getSystemFlowRate()).isNull();
+        assertSameAggregate(areaMapper.toDomain(entity), area);
+    }
+
+    @Test
+    void areaEntityWithNullColumnsMapsToADomainAreaWithNulls() {
+        AreaEntity entity = areaMapper.toEntity(TestData.area());
+        entity.setAreaHectares(null);
+        entity.setIrrigationSystemType(null);
+        entity.setSystemFlowRate(null);
+
+        Area area = areaMapper.toDomain(entity);
+
+        assertThat(area.getAreaHectares()).isNull();
+        assertThat(area.getIrrigationSystemType()).isNull();
+        assertThat(area.getSystemFlowRate()).isNull();
+        assertThat(area.getName()).isEqualTo("Talhão 1");
+    }
+
+    @Test
+    void cropWithKcAndRootDepthRoundTripsAndFillsTheNewColumns() {
+        Crop crop = new Crop(UUID.randomUUID(), "Milho", "Híbrido", 120,
+                List.of(new CropStage("Inicial", new Kc(bd("0.40")), 1)), new Kc(bd("1.15")), new RootDepth(bd("450.50")));
+
+        CropEntity entity = cropMapper.toEntity(crop);
+
+        assertThat(entity.getKc()).isEqualByComparingTo("1.15");
+        assertThat(entity.getRootDepthMm()).isEqualByComparingTo("450.50");
+        assertSameAggregate(cropMapper.toDomain(entity), crop);
+    }
+
+    @Test
+    void cropWithZeroStagesRoundTrips() {
+        Crop crop = new Crop(UUID.randomUUID(), "Sem estágios", null, null, List.of(),
+                new Kc(bd("1.00")), new RootDepth(bd("400")));
+
+        CropEntity entity = cropMapper.toEntity(crop);
+
+        assertThat(entity.getStages()).isEmpty();
+        Crop restored = cropMapper.toDomain(entity);
+        assertThat(restored.getStages()).isEmpty();
+        assertSameAggregate(restored, crop);
+    }
+
+    @Test
+    void legacyCropEntityWithoutKcAndRootDepthMapsToNulls() {
+        CropEntity entity = cropMapper.toEntity(TestData.crop());
+
+        assertThat(entity.getKc()).isNull();
+        assertThat(entity.getRootDepthMm()).isNull();
+        Crop crop = cropMapper.toDomain(entity);
+        assertThat(crop.getKc()).isNull();
+        assertThat(crop.getRootDepth()).isNull();
+    }
+
+    @Test
+    void soilProfileWithGravimetricPairRoundTripsAndFillsTheNewColumns() {
+        SoilProfile soil = new SoilProfile(UUID.randomUUID(), "Argiloso",
+                new VolumetricWaterContent(bd("0.35")), new VolumetricWaterContent(bd("0.18")),
+                new GravimetricWaterContent(bd("28.50")), new GravimetricWaterContent(bd("14.20")),
+                new BulkDensity(bd("1.30")), new RootDepth(bd("600.00")), new AvailableWater(bd("100.00")),
+                MeasurementUnit.VOLUMETRIC_WATER_CONTENT, MeasurementUnit.GRAMS_PER_CUBIC_CENTIMETER,
+                MeasurementUnit.MILLIMETERS, MeasurementUnit.MILLIMETERS);
+
+        SoilProfileEntity entity = soilMapper.toEntity(soil);
+
+        assertThat(entity.getFieldCapacityGravimetricPct()).isEqualByComparingTo("28.50");
+        assertThat(entity.getPermanentWiltingPointGravimetricPct()).isEqualByComparingTo("14.20");
+        assertSameAggregate(soilMapper.toDomain(entity), soil);
+    }
+
+    @Test
+    void soilProfileWithOnlyTypeAndDensityMapsEveryOptionalColumnToNull() {
+        SoilProfile soil = new SoilProfile(UUID.randomUUID(), "Mínimo", null, null, null, null,
+                new BulkDensity(bd("1.30")), null, null, null, null, null, null);
+
+        SoilProfileEntity entity = soilMapper.toEntity(soil);
+
+        assertThat(entity.getFieldCapacity()).isNull();
+        assertThat(entity.getPermanentWiltingPoint()).isNull();
+        assertThat(entity.getFieldCapacityGravimetricPct()).isNull();
+        assertThat(entity.getPermanentWiltingPointGravimetricPct()).isNull();
+        assertThat(entity.getEffectiveRootDepth()).isNull();
+        assertThat(entity.getAvailableWater()).isNull();
+        assertThat(entity.getSoilWaterUnit()).isNull();
+        assertThat(entity.getBulkDensityUnit()).isNull();
+        assertThat(entity.getRootDepthUnit()).isNull();
+        assertThat(entity.getAvailableWaterUnit()).isNull();
+        assertSameAggregate(soilMapper.toDomain(entity), soil);
+    }
+
+    @Test
+    void legacySoilProfileEntityWithoutGravimetricColumnsMapsToNullGravimetricPair() {
+        SoilProfileEntity entity = soilMapper.toEntity(TestData.soilProfile());
+
+        SoilProfile soil = soilMapper.toDomain(entity);
+
+        assertThat(soil.getFieldCapacityGravimetric()).isNull();
+        assertThat(soil.getPermanentWiltingPointGravimetric()).isNull();
+        assertThat(soil.getFieldCapacity().value()).isEqualByComparingTo("0.35");
     }
 
     // =====================================================================================

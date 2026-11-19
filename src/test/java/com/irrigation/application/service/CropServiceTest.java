@@ -43,7 +43,8 @@ class CropServiceTest {
     }
 
     private static CropInput crop(String name, List<CropStageInput> stages) {
-        return new CropInput(name, null, 100, stages);
+        // Revisão A-01 (Req 2.10): kc e rootDepth passaram a ser obrigatórios; a fixture os informa.
+        return new CropInput(name, null, 100, stages, bd("1.0"), bd("400"));
     }
 
     @Test
@@ -58,11 +59,13 @@ class CropServiceTest {
     }
 
     @Test
-    void createRejectsAnEmptyStageList() {
-        assertThatThrownBy(() -> service.create(crop("Milho", List.of())))
-                .isInstanceOfSatisfying(ValidationFailedException.class, e ->
-                        assertThat(fields(e)).containsExactly("stages"));
-        verify(repository, never()).save(any());
+    void createAcceptsAnEmptyStageList() {
+        // Revisão A-01 (Req 2.5): zero estágios passou a ser válido; antes a lista vazia era rejeitada.
+        when(repository.save(any(Crop.class))).thenAnswer(i -> i.getArgument(0));
+
+        CropOutput output = service.create(crop("Milho", List.of()));
+
+        assertThat(output.stages()).isEmpty();
     }
 
     @Test

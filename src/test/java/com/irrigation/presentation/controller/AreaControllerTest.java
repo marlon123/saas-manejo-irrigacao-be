@@ -77,6 +77,7 @@ class AreaControllerTest {
 
     @Test
     void createRejectsInvalidDataWithProblemDetailsListingEachField() throws Exception {
+        // Revisão A-01 (Req 3.1): irrigationSystemType nulo deixou de ser violação (campo opcional).
         String body = """
                 {"name":"  ","areaHectares":0,"latitude":95,"irrigationSystemType":null,"systemFlowRate":-1}""";
 
@@ -87,7 +88,7 @@ class AreaControllerTest {
                 .andExpect(jsonPath("$.title").isNotEmpty())
                 .andExpect(jsonPath("$.detail").isNotEmpty())
                 .andExpect(jsonPath("$.violations[*].field",
-                        hasItems("name", "areaHectares", "latitude", "irrigationSystemType", "systemFlowRate")))
+                        hasItems("name", "areaHectares", "latitude", "systemFlowRate")))
                 .andExpect(jsonPath("$.violations[*].message").isNotEmpty());
     }
 

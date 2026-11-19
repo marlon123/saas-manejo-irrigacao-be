@@ -13,7 +13,8 @@ import java.util.UUID;
 
 /**
  * Modelo de persistência da tabela {@code soil_profiles}.
- * Cada parâmetro possui sua unidade de medida explícita (Req 3.14).
+ * Cada parâmetro informado possui sua unidade de medida (Req 3.14). Par volumétrico, profundidade e
+ * unidades são opcionais (V4); o par gravimétrico é novo (V4).
  */
 @Entity
 @Table(name = "soil_profiles")
@@ -25,35 +26,41 @@ public class SoilProfileEntity {
     @Column(name = "soil_type", nullable = false, length = 255)
     private String soilType;
 
-    @Column(name = "field_capacity", nullable = false)
+    @Column(name = "field_capacity")
     private BigDecimal fieldCapacity;
 
-    @Column(name = "permanent_wilting_point", nullable = false)
+    @Column(name = "permanent_wilting_point")
     private BigDecimal permanentWiltingPoint;
+
+    @Column(name = "field_capacity_gravimetric_pct")
+    private BigDecimal fieldCapacityGravimetricPct;
+
+    @Column(name = "permanent_wilting_point_gravimetric_pct")
+    private BigDecimal permanentWiltingPointGravimetricPct;
 
     @Column(name = "bulk_density", nullable = false)
     private BigDecimal bulkDensity;
 
-    @Column(name = "effective_root_depth", nullable = false)
+    @Column(name = "effective_root_depth")
     private BigDecimal effectiveRootDepth;
 
     @Column(name = "available_water")
     private BigDecimal availableWater;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "soil_water_unit", nullable = false, length = 50)
+    @Column(name = "soil_water_unit", length = 50)
     private MeasurementUnit soilWaterUnit;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "bulk_density_unit", nullable = false, length = 50)
+    @Column(name = "bulk_density_unit", length = 50)
     private MeasurementUnit bulkDensityUnit;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "root_depth_unit", nullable = false, length = 50)
+    @Column(name = "root_depth_unit", length = 50)
     private MeasurementUnit rootDepthUnit;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "available_water_unit", nullable = false, length = 50)
+    @Column(name = "available_water_unit", length = 50)
     private MeasurementUnit availableWaterUnit;
 
     protected SoilProfileEntity() {
@@ -72,6 +79,10 @@ public class SoilProfileEntity {
     public void setFieldCapacity(BigDecimal fieldCapacity) { this.fieldCapacity = fieldCapacity; }
     public BigDecimal getPermanentWiltingPoint() { return permanentWiltingPoint; }
     public void setPermanentWiltingPoint(BigDecimal permanentWiltingPoint) { this.permanentWiltingPoint = permanentWiltingPoint; }
+    public BigDecimal getFieldCapacityGravimetricPct() { return fieldCapacityGravimetricPct; }
+    public void setFieldCapacityGravimetricPct(BigDecimal value) { this.fieldCapacityGravimetricPct = value; }
+    public BigDecimal getPermanentWiltingPointGravimetricPct() { return permanentWiltingPointGravimetricPct; }
+    public void setPermanentWiltingPointGravimetricPct(BigDecimal value) { this.permanentWiltingPointGravimetricPct = value; }
     public BigDecimal getBulkDensity() { return bulkDensity; }
     public void setBulkDensity(BigDecimal bulkDensity) { this.bulkDensity = bulkDensity; }
     public BigDecimal getEffectiveRootDepth() { return effectiveRootDepth; }

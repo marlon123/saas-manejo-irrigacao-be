@@ -70,8 +70,19 @@ public class AreaRepositoryAdapter implements AreaRepository {
                     "campo de ordenação inválido: " + sortBy + ". Valores aceitos: " + SORTABLE_FIELDS.keySet());
         }
         Sort.Direction direction = "desc".equalsIgnoreCase(sortDirection) ? Sort.Direction.DESC : Sort.Direction.ASC;
+        if ("areaHectares".equals(property)) {
+            // areaHectares pode ser nulo (Req 3.1): os nulos ficam sempre no fim, nas duas direções.
+            // O Spring Data ignora nullsLast no findAll(Pageable), então a ordenação está nas consultas do repositório.
+            org.springframework.data.domain.Pageable unsorted =
+                    org.springframework.data.domain.PageRequest.of(pageRequest.page(), pageRequest.size());
+            var page = direction == Sort.Direction.DESC
+                    ? jpa.findAllOrderByAreaHectaresDescNullsLast(unsorted)
+                    : jpa.findAllOrderByAreaHectaresAscNullsLast(unsorted);
+            return page.getContent().stream().map(mapper::toDomain).toList();
+        }
         // "id" como desempate garante paginação estável
-        Sort sort = Sort.by(direction, property).and(Sort.by(Sort.Direction.ASC, "id"));
+        Sort sort = Sort.by(new Sort.Order(direction, property))
+                .and(Sort.by(Sort.Direction.ASC, "id"));
         return jpa.findAll(org.springframework.data.domain.PageRequest.of(pageRequest.page(), pageRequest.size(), sort))
                 .getContent().stream().map(mapper::toDomain).toList();
     }

@@ -77,14 +77,18 @@ class SoilProfileServiceTest {
     }
 
     @Test
-    void createRequiresEveryUnit() {
+    void createAcceptsMissingUnits() {
+        // Revisão A-01 (Req 1.6): as quatro unidades deixaram de ser obrigatórias; antes eram rejeitadas.
+        when(repository.save(any(SoilProfile.class))).thenAnswer(i -> i.getArgument(0));
         SoilProfileInput in = new SoilProfileInput("Argiloso", bd("0.35"), bd("0.18"), bd("1.3"), bd("500"),
                 bd("90"), null, null, null, null);
 
-        assertThatThrownBy(() -> service.create(in))
-                .isInstanceOfSatisfying(ValidationFailedException.class, e ->
-                        assertThat(fields(e)).containsExactlyInAnyOrder(
-                                "soilWaterUnit", "bulkDensityUnit", "rootDepthUnit", "availableWaterUnit"));
+        SoilProfileOutput output = service.create(in);
+
+        assertThat(output.soilWaterUnit()).isNull();
+        assertThat(output.bulkDensityUnit()).isNull();
+        assertThat(output.rootDepthUnit()).isNull();
+        assertThat(output.availableWaterUnit()).isNull();
     }
 
     @Test
