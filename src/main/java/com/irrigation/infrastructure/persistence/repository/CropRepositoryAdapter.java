@@ -40,7 +40,13 @@ public class CropRepositoryAdapter implements CropRepository {
 
     @Override
     public void deleteById(UUID id) {
-        jpa.deleteById(id);
+        try {
+            jpa.deleteById(id);
+            jpa.flush();
+        } catch (org.springframework.dao.DataIntegrityViolationException e) {
+            RuntimeException translated = ForeignKeyViolationTranslator.translate(e, "a cultura", id);
+            throw translated != null ? translated : e;
+        }
     }
 
     @Override

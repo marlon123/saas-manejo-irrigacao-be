@@ -8,7 +8,7 @@ O plano tem 7 fases, na ordem do item 8 do `requirements.md` e do "Plano de entr
 
 - [x] Fase 1: Cadastros opcionais e migração V4 (Solo, Cultura e Área), com a revisão dos testes afetados (A-01)
 - [x] Fase 2: Value objects, `WaterBalanceCalculator` puro e `PresentationRounding`
-- [ ] Fase 3: Plano de Manejo, meteorologia e Irrigação Real (migração V5, domínio, persistência e serviços)
+- [x] Fase 3: Plano de Manejo, meteorologia e Irrigação Real (migração V5, domínio, persistência e serviços)
 - [ ] Fase 4: Balanço diário imutável (migração V6), cálculo, reprocessamento e consulta (domínio, persistência e serviços)
 - [ ] Fase 5: Controladores, DTOs, tratamento de erros e OpenAPI
 - [ ] Fase 6: Testes de integração ponta a ponta, ArchUnit e cobertura
@@ -192,72 +192,72 @@ O plano tem 7 fases, na ordem do item 8 do `requirements.md` e do "Plano de entr
 
 **Fase 3: Plano de Manejo, meteorologia e Irrigação Real**
 
-- [ ] 10. Migração V5
-  - [ ] 10.1 Criar `V5__management_plan_and_daily_inputs.sql`
+- [x] 10. Migração V5
+  - [x] 10.1 Criar `V5__management_plan_and_daily_inputs.sql`
     - `management_plans`: FKs `RESTRICT` para área, cultura e solo; `end_date >= start_date`; `f_factor NUMERIC(5,4)` com CHECK `> 0 AND <= 1`; `sprinkler_rate_mm_h NUMERIC(10,4)` com CHECK `> 0 AND <= 500`; índice único parcial `uq_management_plans_active_area ON (area_id) WHERE end_date IS NULL`; trigger `set_updated_at()` reutilizado da V3
     - `daily_weather` (`UNIQUE (area_id, weather_date)`, ETP e P `NUMERIC(8,3)` `>= 0`) e `applied_irrigation` (`UNIQUE (area_id, irrigation_date)`, `NUMERIC(8,3)` `>= 0`), FKs `RESTRICT`, defaults UTC e trigger
     - _Requisitos: 4.1, 4.7, 5.7, 6.7, 16.3_
 
-- [ ] 11. Domínio e portas
-  - [ ] 11.1 Criar o agregado `ManagementPlan`
+- [x] 11. Domínio e portas
+  - [x] 11.1 Criar o agregado `ManagementPlan`
     - `id`, `areaId`, `cropId`, `soilProfileId`, `startDate`, `endDate` opcional, F e Sprinkler_Rate. Operações `updateParameters(f, rate)` e `close(endDate)`. Métodos estáticos `validateX`. `endDate` não pode ser anterior a `startDate` (A-02)
     - _Requisitos: 4.1, 4.2, 4.3, 4.4, 4.5_
-  - [ ] 11.2 Criar `DailyWeather` e `AppliedIrrigation`
+  - [x] 11.2 Criar `DailyWeather` e `AppliedIrrigation`
     - `id`, `areaId`, `date` e os valores em `EtpDepth`, `PrecipitationDepth` e `AppliedIrrigationDepth`
     - _Requisitos: 5.1, 5.2, 6.1, 6.3_
-  - [ ] 11.3 Criar as portas em `domain.repository`
+  - [x] 11.3 Criar as portas em `domain.repository`
     - `ManagementPlanRepository` (`save`, `findById`, `findByAreaOrderByStartDateDesc`, `findActiveByArea`, `findCoveringDate`, `hasBalances`, `lastCalculatedDate`), `DailyWeatherRepository` e `AppliedIrrigationRepository` (`upsert`, `findByAreaAndDate`, `findByAreaAndPeriod` em ordem crescente)
     - `AreaRepository`, `CropRepository` e `SoilProfileRepository` não ganham métodos (DD-06)
     - _Requisitos: 4.11, 5.7, 5.9, 6.7, 6.10_
 
-- [ ] 12. Infraestrutura
-  - [ ] 12.1 Criar entidades JPA, interfaces `*JpaRepository` e mapeadores manuais
+- [x] 12. Infraestrutura
+  - [x] 12.1 Criar entidades JPA, interfaces `*JpaRepository` e mapeadores manuais
     - `ManagementPlanEntity`, `DailyWeatherEntity`, `AppliedIrrigationEntity`, sem mapear `created_at` e `updated_at`
     - _Requisitos: 4.1, 5.1, 6.1_
-  - [ ] 12.2 Criar os adaptadores `*RepositoryAdapter`
+  - [x] 12.2 Criar os adaptadores `*RepositoryAdapter`
     - `upsert` com `INSERT ... ON CONFLICT (area_id, <data>) DO UPDATE` nativo, seguido de leitura na mesma transação
     - Violação do índice de plano ativo vira `BusinessRuleException` (422)
     - _Requisitos: 4.7, 4.8, 5.7, 6.7_
-  - [ ] 12.3 Traduzir violação de `FOREIGN KEY` na exclusão de área, solo e cultura
+  - [x] 12.3 Traduzir violação de `FOREIGN KEY` na exclusão de área, solo e cultura
     - Nos adaptadores existentes, `deleteById` chama `flush()` e traduz `23503` em `BusinessRuleException` (422) com mensagem que cita o tipo de referência. Não alterar os construtores dos serviços nem as portas
     - _Requisitos: 1.13, 2.9, 3.5_
 
-- [ ] 13. Aplicação
-  - [ ] 13.1 Criar DTOs de aplicação
+- [x] 13. Aplicação
+  - [x] 13.1 Criar DTOs de aplicação
     - `ManagementPlanInput/Output`, `DailyWeatherInput/Output` e `AppliedIrrigationInput/Output` em `application.dto`
     - _Requisitos: 4.1, 5.1, 6.1_
-  - [ ] 13.2 Implementar `ManagementPlanService`
+  - [x] 13.2 Implementar `ManagementPlanService`
     - Criar (201), atualizar F, taxa e `endDate`, consultar por área (ativo e encerrados, início decrescente, lista vazia sem planos). 404 para área, cultura ou solo inexistentes; 400 acumulado com `ViolationCollector`; 422 para segundo plano ativo, sobreposição e `endDate` anterior ao último dia calculado (A-02); 422 ao trocar cultura ou solo com balanço existente
     - _Requisitos: 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 4.8, 4.9, 4.10, 4.11, 4.12_
-  - [ ] 13.3 Implementar `DailyWeatherService` e `AppliedIrrigationService`
+  - [x] 13.3 Implementar `DailyWeatherService` e `AppliedIrrigationService`
     - Upsert (200 com o registro persistido), consulta por período (ordem crescente, máximo 366 dias, data inicial não posterior à final), 404 para área inexistente em escrita e consulta, data não posterior à data atual em UTC com `Clock` injetável, violações acumuladas (A-05)
     - _Requisitos: 5.1, 5.2, 5.3, 5.4, 5.5, 5.6, 5.7, 5.8, 5.9, 5.10, 5.11, 5.12, 6.1, 6.2, 6.3, 6.4, 6.5, 6.6, 6.7, 6.8, 6.9, 6.10, 6.11, 6.12_
 
-- [ ] 14. Testes da Fase 3
-  - [ ] 14.1 Criar repositórios em memória e fixtures de teste
+- [x] 14. Testes da Fase 3
+  - [x] 14.1 Criar repositórios em memória e fixtures de teste
     - `InMemoryManagementPlanRepository`, `InMemoryDailyWeatherRepository` e `InMemoryAppliedIrrigationRepository` no estilo de `InMemoryAreaRepository`, com `Clock` fixo. Estender `TestData`
     - _Requisitos: 4.1, 5.1, 6.1_
-  - [ ] 14.2 Escrever testes unitários dos serviços e do domínio
+  - [x] 14.2 Escrever testes unitários dos serviços e do domínio
     - Ordem 400, 404, 422; plano com recurso inexistente (404); segundo plano ativo; sobreposição; `endDate` (A-02); troca de cultura com balanço (422); F e taxa atualizados sem mudar balanços já gravados; IR zero aceita; omitir IR recusado sem assumir zero; data futura recusada; consulta por período vazia (200) e de área inexistente (404)
     - _Requisitos: 4.5, 4.6, 4.8, 4.9, 4.10, 5.3, 5.4, 5.5, 5.6, 5.10, 5.11, 6.2, 6.4, 6.5, 6.6, 6.11, 6.12_
-  - [ ] 14.3 Escrever testes dos mapeadores de persistência
+  - [x] 14.3 Escrever testes dos mapeadores de persistência
     - Plano, meteorologia e IR (ida e volta)
     - _Requisitos: 4.1, 5.1, 6.1_
-  - [ ] 14.4 Escrever teste de propriedade para os limites dos value objects e dos cadastros
+  - [x] 14.4 Escrever teste de propriedade para os limites dos value objects e dos cadastros
     - **Propriedade 11: Limites dos value objects e dos cadastros**
     - **Valida: Requisitos 1.2, 1.3, 1.9, 2.2, 2.3, 2.10, 3.2, 3.3, 4.3, 4.4, 5.2, 5.5, 6.2, 6.3, 7.4, 10.5**
     - Parametrizado por `RangeSpec`, com valores nas bordas. Nos serviços de cadastro, plano, meteorologia e IR, verifica violação com o nome do campo e nenhuma persistência
-  - [ ] 14.5 Escrever teste de propriedade para um registro por área e data nas entradas diárias
+  - [x] 14.5 Escrever teste de propriedade para um registro por área e data nas entradas diárias
     - **Propriedade 14: Um registro por área e data nas entradas diárias**
     - **Valida: Requisitos 5.1, 5.7, 6.1, 6.7**
-  - [ ] 14.6 Escrever teste de propriedade para um plano ativo por área
+  - [x] 14.6 Escrever teste de propriedade para um plano ativo por área
     - **Propriedade 23: Um plano ativo por área**
     - **Valida: Requisitos 4.7, 4.8, 4.11**
-  - [ ] 14.7 Escrever testes de integração da V5 e da persistência
+  - [x] 14.7 Escrever testes de integração da V5 e da persistência
     - Migração V4 para V5 com dados, CHECKs, índice único parcial e `UNIQUE`; round trip dos três agregados; duas gravações concorrentes de meteorologia e de IR para a mesma chave (uma linha, `CountDownLatch`); duas criações concorrentes de plano ativo (no máximo um 201); exclusão de área, solo e cultura referenciados por plano gera `BusinessRuleException`
     - _Requisitos: 4.7, 4.8, 5.7, 6.7, 1.13, 2.9, 3.5, 16.4_
 
-- [ ] 15. Checkpoint da Fase 3: build, testes e relatórios
+- [x] 15. Checkpoint da Fase 3: build, testes e relatórios
   - Rodar `clean test integrationTest jacocoTestCoverageVerification`, conferir contagens nos XML, ausência de falhas e de testes pulados, e cobertura de linha do JaCoCo (mínimo de 80%)
   - Informar o que foi feito, as decisões (inclusive A-02, A-03 e A-05) e as pendências. **Aguardar aprovação antes da Fase 4**
 

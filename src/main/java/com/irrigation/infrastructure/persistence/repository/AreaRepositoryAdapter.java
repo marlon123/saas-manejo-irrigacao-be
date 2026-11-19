@@ -46,7 +46,17 @@ public class AreaRepositoryAdapter implements AreaRepository {
 
     @Override
     public void deleteById(UUID id) {
-        jpa.deleteById(id);
+        try {
+            jpa.deleteById(id);
+            jpa.flush();
+        } catch (org.springframework.dao.DataIntegrityViolationException e) {
+            throw translateOrRethrow(e, id);
+        }
+    }
+
+    private static RuntimeException translateOrRethrow(RuntimeException e, UUID id) {
+        RuntimeException translated = ForeignKeyViolationTranslator.translate(e, "a área", id);
+        return translated != null ? translated : e;
     }
 
     @Override

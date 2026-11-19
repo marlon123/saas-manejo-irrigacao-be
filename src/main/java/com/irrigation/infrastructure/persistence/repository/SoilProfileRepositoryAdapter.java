@@ -40,7 +40,13 @@ public class SoilProfileRepositoryAdapter implements SoilProfileRepository {
 
     @Override
     public void deleteById(UUID id) {
-        jpa.deleteById(id);
+        try {
+            jpa.deleteById(id);
+            jpa.flush();
+        } catch (org.springframework.dao.DataIntegrityViolationException e) {
+            RuntimeException translated = ForeignKeyViolationTranslator.translate(e, "o perfil de solo", id);
+            throw translated != null ? translated : e;
+        }
     }
 
     @Override

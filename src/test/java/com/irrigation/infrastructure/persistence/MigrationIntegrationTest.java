@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 /**
  * Migrações Flyway no PostgreSQL real (Req 8.1, 8.3, 8.5).
  *
- * <p>Subir o contexto da classe base já prova que V1 a V4 aplicam e que o mapeamento JPA
+ * <p>Subir o contexto da classe base já prova que V1 a V5 aplicam e que o mapeamento JPA
  * bate com o schema ({@code ddl-auto: validate}); aqui conferimos o resultado em detalhe.
  */
 class MigrationIntegrationTest extends PostgresIntegrationTest {
@@ -28,7 +28,7 @@ class MigrationIntegrationTest extends PostgresIntegrationTest {
         List<Map<String, Object>> history = jdbc.queryForList(
                 "SELECT version, success FROM flyway_schema_history WHERE version IS NOT NULL ORDER BY installed_rank");
 
-        assertThat(history).extracting(row -> row.get("version")).containsExactly("1", "2", "3", "4");
+        assertThat(history).extracting(row -> row.get("version")).containsExactly("1", "2", "3", "4", "5");
         assertThat(history).allSatisfy(row -> assertThat(row.get("success")).isEqualTo(true));
     }
 
@@ -96,7 +96,7 @@ class MigrationIntegrationTest extends PostgresIntegrationTest {
                 .queryForList("SELECT version, success FROM flyway_schema_history WHERE version IS NOT NULL "
                         + "ORDER BY installed_rank");
         assertThat(history).filteredOn(row -> Boolean.TRUE.equals(row.get("success")))
-                .extracting(row -> row.get("version")).containsExactly("1", "2", "3", "4");
+                .extracting(row -> row.get("version")).containsExactly("1", "2", "3", "4", "5");
     }
 
     /** Junta as mensagens de toda a cadeia de causas. */

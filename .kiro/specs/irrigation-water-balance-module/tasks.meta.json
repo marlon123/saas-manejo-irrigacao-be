@@ -430,6 +430,252 @@
         "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
         "timestamp": 1795121429137
       }
+    ],
+    "10.1 Criar `V5__management_plan_and_daily_inputs.sql`": [
+      {
+        "executionId": "cd1c0672-c30a-41a7-9d21-ce207cc4a4fb",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795123513542
+      },
+      {
+        "executionId": "cd1c0672-c30a-41a7-9d21-ce207cc4a4fb",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795123593630
+      }
+    ],
+    "11.1 Criar o agregado `ManagementPlan`": [
+      {
+        "executionId": "cd1c0672-c30a-41a7-9d21-ce207cc4a4fb",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795123513759
+      },
+      {
+        "executionId": "cd1c0672-c30a-41a7-9d21-ce207cc4a4fb",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795123594275
+      }
+    ],
+    "11.2 Criar `DailyWeather` e `AppliedIrrigation`": [
+      {
+        "executionId": "cd1c0672-c30a-41a7-9d21-ce207cc4a4fb",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795123513885
+      },
+      {
+        "executionId": "cd1c0672-c30a-41a7-9d21-ce207cc4a4fb",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795123595330
+      }
+    ],
+    "10. Migração V5": [
+      {
+        "executionId": "cd1c0672-c30a-41a7-9d21-ce207cc4a4fb",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795123593746
+      }
+    ],
+    "11.3 Criar as portas em `domain.repository`": [
+      {
+        "executionId": "cd1c0672-c30a-41a7-9d21-ce207cc4a4fb",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795123595855
+      },
+      {
+        "executionId": "cd1c0672-c30a-41a7-9d21-ce207cc4a4fb",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795123671909
+      }
+    ],
+    "11. Domínio e portas": [
+      {
+        "executionId": "cd1c0672-c30a-41a7-9d21-ce207cc4a4fb",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795123672192
+      }
+    ],
+    "12.1 Criar entidades JPA, interfaces `*JpaRepository` e mapeadores manuais": [
+      {
+        "executionId": "cd1c0672-c30a-41a7-9d21-ce207cc4a4fb",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795123672341
+      },
+      {
+        "executionId": "cd1c0672-c30a-41a7-9d21-ce207cc4a4fb",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795123787436
+      }
+    ],
+    "13.1 Criar DTOs de aplicação": [
+      {
+        "executionId": "cd1c0672-c30a-41a7-9d21-ce207cc4a4fb",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795123672464
+      },
+      {
+        "executionId": "cd1c0672-c30a-41a7-9d21-ce207cc4a4fb",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795123787653
+      }
+    ],
+    "12.2 Criar os adaptadores `*RepositoryAdapter`": [
+      {
+        "executionId": "cd1c0672-c30a-41a7-9d21-ce207cc4a4fb",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795123791827
+      },
+      {
+        "executionId": "cd1c0672-c30a-41a7-9d21-ce207cc4a4fb",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795123892274
+      }
+    ],
+    "12.3 Traduzir violação de `FOREIGN KEY` na exclusão de área, solo e cultura": [
+      {
+        "executionId": "cd1c0672-c30a-41a7-9d21-ce207cc4a4fb",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795123792066
+      },
+      {
+        "executionId": "cd1c0672-c30a-41a7-9d21-ce207cc4a4fb",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795123893066
+      }
+    ],
+    "12. Infraestrutura": [
+      {
+        "executionId": "cd1c0672-c30a-41a7-9d21-ce207cc4a4fb",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795123893142
+      }
+    ],
+    "13.2 Implementar `ManagementPlanService`": [
+      {
+        "executionId": "cd1c0672-c30a-41a7-9d21-ce207cc4a4fb",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795123894029
+      },
+      {
+        "executionId": "cd1c0672-c30a-41a7-9d21-ce207cc4a4fb",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795123998274
+      }
+    ],
+    "13.3 Implementar `DailyWeatherService` e `AppliedIrrigationService`": [
+      {
+        "executionId": "cd1c0672-c30a-41a7-9d21-ce207cc4a4fb",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795123894600
+      },
+      {
+        "executionId": "cd1c0672-c30a-41a7-9d21-ce207cc4a4fb",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795123998476
+      }
+    ],
+    "13. Aplicação": [
+      {
+        "executionId": "cd1c0672-c30a-41a7-9d21-ce207cc4a4fb",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795123998557
+      }
+    ],
+    "14.1 Criar repositórios em memória e fixtures de teste": [
+      {
+        "executionId": "cd1c0672-c30a-41a7-9d21-ce207cc4a4fb",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795123998707
+      },
+      {
+        "executionId": "cd1c0672-c30a-41a7-9d21-ce207cc4a4fb",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795124108302
+      }
+    ],
+    "14.2 Escrever testes unitários dos serviços e do domínio": [
+      {
+        "executionId": "cd1c0672-c30a-41a7-9d21-ce207cc4a4fb",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795124108442
+      },
+      {
+        "executionId": "cd1c0672-c30a-41a7-9d21-ce207cc4a4fb",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795124588438
+      }
+    ],
+    "14.3 Escrever testes dos mapeadores de persistência": [
+      {
+        "executionId": "cd1c0672-c30a-41a7-9d21-ce207cc4a4fb",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795124109018
+      },
+      {
+        "executionId": "cd1c0672-c30a-41a7-9d21-ce207cc4a4fb",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795124589740
+      }
+    ],
+    "14.4 Escrever teste de propriedade para os limites dos value objects e dos cadastros": [
+      {
+        "executionId": "cd1c0672-c30a-41a7-9d21-ce207cc4a4fb",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795124109795
+      },
+      {
+        "executionId": "cd1c0672-c30a-41a7-9d21-ce207cc4a4fb",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795124590271
+      }
+    ],
+    "14.5 Escrever teste de propriedade para um registro por área e data nas entradas diárias": [
+      {
+        "executionId": "cd1c0672-c30a-41a7-9d21-ce207cc4a4fb",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795124110691
+      },
+      {
+        "executionId": "cd1c0672-c30a-41a7-9d21-ce207cc4a4fb",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795124591550
+      }
+    ],
+    "14.6 Escrever teste de propriedade para um plano ativo por área": [
+      {
+        "executionId": "cd1c0672-c30a-41a7-9d21-ce207cc4a4fb",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795124111280
+      },
+      {
+        "executionId": "cd1c0672-c30a-41a7-9d21-ce207cc4a4fb",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795124591766
+      }
+    ],
+    "14.7 Escrever testes de integração da V5 e da persistência": [
+      {
+        "executionId": "cd1c0672-c30a-41a7-9d21-ce207cc4a4fb",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795124592177
+      },
+      {
+        "executionId": "cd1c0672-c30a-41a7-9d21-ce207cc4a4fb",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795125235640
+      }
+    ],
+    "14. Testes da Fase 3": [
+      {
+        "executionId": "cd1c0672-c30a-41a7-9d21-ce207cc4a4fb",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795125235878
+      }
+    ],
+    "15. Checkpoint da Fase 3: build, testes e relatórios": [
+      {
+        "executionId": "cd1c0672-c30a-41a7-9d21-ce207cc4a4fb",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795125236152
+      }
     ]
   }
 }
