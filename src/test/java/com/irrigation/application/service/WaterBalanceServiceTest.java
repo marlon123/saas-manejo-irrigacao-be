@@ -232,6 +232,68 @@ class WaterBalanceServiceTest {
         assertThat(h.balances.count()).isEqualTo(2);
     }
 
+    // ------------------------------------------------------------ Planos posteriores (DP-06)
+
+    @Test
+    @DisplayName("DP-06: o segundo plano continua a cadeia (AFDi = AFDf do dia anterior) e pode recomendar no 1º dia")
+    void secondPlanContinuesTheChainWithoutRestart() {
+        h.calculateDays(3);
+        var second = h.startSecondPlanAt(4);
+
+        WaterBalanceOutput day4 = h.calculateDay(4);
+
+        DailyWaterBalance stored = h.current(4);
+        assertThat(stored.managementPlanId()).isEqualTo(second.getId());
+        assertThat(stored.inputs().firstDayOfPlan()).isFalse();
+        assertThat(stored.result().afdInitial()).isEqualByComparingTo(h.current(3).result().afdFinal());
+        assertThat(stored.result().afdInitial()).isEqualByComparingTo("28"); // não CAD × F = 36
+        // I = 5 > 0 e não é o primeiro dia do primeiro plano: recomendado, sem motivo
+        assertThat(stored.result().recommended()).isTrue();
+        assertThat(stored.result().noRecommendationReason()).isNull();
+        assertThat(day4.results().irrigationRecommended()).isTrue();
+    }
+
+    @Test
+    @DisplayName("DP-06: só o primeiro dia do primeiro plano tem a restrição de recomendação")
+    void firstDayRestrictionAppliesOnlyToTheFirstPlan() {
+        h.calculateDays(3);
+        h.startSecondPlanAt(4);
+        h.calculateDay(4);
+
+        assertThat(h.current(1).inputs().firstDayOfPlan()).isTrue();
+        assertThat(h.current(1).result().recommended()).isFalse();
+        assertThat(h.current(1).result().noRecommendationReason())
+                .isEqualTo(NoRecommendationReason.FIRST_DAY_OF_FIRST_CYCLE);
+        assertThat(h.current(4).inputs().firstDayOfPlan()).isFalse();
+        assertThat(h.current(4).result().noRecommendationReason()).isNull();
+    }
+
+    @Test
+    @DisplayName("DP-06: lacuna entre planos é 422 com a primeira data sem cálculo e o início do primeiro plano")
+    void gapBetweenPlansReportsTheFirstMissingDate() {
+        h.calculateDays(2);
+        h.startSecondPlanAt(4); // o dia 3 não está coberto nem calculado
+
+        assertThatThrownBy(() -> h.calculateDay(4))
+                .isInstanceOf(BusinessRuleException.class)
+                .isNotInstanceOf(PreconditionsNotMetException.class)
+                .hasMessageContaining(scenarioDate(3).toString())
+                .hasMessageContaining(scenarioDate(1).toString());
+
+        assertThat(h.balances.count()).isEqualTo(2);
+    }
+
+    @Test
+    @DisplayName("DP-06: sem nenhum dia calculado, a lacuna do segundo plano aponta o início do primeiro plano")
+    void gapInSecondPlanWithoutHistoryPointsToTheFirstPlanStart() {
+        h.startSecondPlanAt(4);
+
+        assertThatThrownBy(() -> h.calculateDay(4))
+                .isInstanceOf(BusinessRuleException.class)
+                .hasMessageContaining(scenarioDate(1).toString());
+        assertThat(h.balances.count()).isZero();
+    }
+
     @Test
     @DisplayName("Req 11.6: pré-condições de dados são verificadas antes da lacuna de histórico")
     void dataPreconditionsComeBeforeTheHistoryGap() {

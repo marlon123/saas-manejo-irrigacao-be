@@ -100,6 +100,48 @@ class WaterBalanceReprocessTest {
     }
 
     @Test
+    @DisplayName("DP-06: reprocessar atravessando o início do segundo plano continua a cadeia, sem reiniciar")
+    void reprocessAcrossSecondPlanContinuesTheChain() {
+        h.calculateDays(3);
+        h.startSecondPlanAt(4);
+        h.calculateDay(4);
+        h.calculateDay(5);
+        List<DailyWaterBalance> originals = snapshot();
+        h.setWeather(2, "7.50", "0");
+
+        h.reprocessFrom(1);
+
+        for (int day = 1; day <= 5; day++) {
+            assertThat(h.current(day).revision()).isEqualTo(2);
+            assertThat(h.current(day).inputs().firstDayOfPlan()).isEqualTo(day == 1);
+        }
+        assertThat(h.current(4).managementPlanId()).isNotEqualTo(h.current(3).managementPlanId());
+        assertThat(h.current(4).result().afdInitial()).isEqualByComparingTo(h.current(3).result().afdFinal());
+        assertThat(h.current(5).result().afdInitial()).isEqualByComparingTo(h.current(4).result().afdFinal());
+        assertThat(h.current(4).result().noRecommendationReason()).isNull();
+        // a correção do dia 2 propaga ao segundo plano (4 não reinicia em CAD × F = 36)
+        assertThat(h.current(4).result().afdInitial())
+                .isNotEqualByComparingTo(originals.get(3).result().afdInitial());
+    }
+
+    @Test
+    @DisplayName("DP-06: reprocessar a partir do início do segundo plano obtém a AFDi da corrente do dia anterior")
+    void reprocessFromSecondPlanStartUsesPreviousDayAfdFinal() {
+        h.calculateDays(3);
+        h.startSecondPlanAt(4);
+        h.calculateDay(4);
+        h.calculateDay(5);
+
+        h.reprocessFrom(4);
+
+        assertThat(h.current(4).revision()).isEqualTo(2);
+        assertThat(h.current(4).inputs().firstDayOfPlan()).isFalse();
+        assertThat(h.current(4).result().afdInitial()).isEqualByComparingTo(h.current(3).result().afdFinal());
+        assertThat(h.current(4).result().afdInitial()).isEqualByComparingTo("28");
+        assertThat(h.current(3).revision()).isEqualTo(1);
+    }
+
+    @Test
     @DisplayName("Req 13.1: dias nunca calculados não são calculados pelo reprocessamento")
     void neverCalculatedDaysAreNotCalculated() {
         h.calculateDays(4);

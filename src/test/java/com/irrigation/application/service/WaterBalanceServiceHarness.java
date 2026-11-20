@@ -103,6 +103,18 @@ final class WaterBalanceServiceHarness {
         }
     }
 
+    /**
+     * Encerra o plano do Cenário A no dia anterior e cria um segundo plano (mesma cultura e solo, F = 0,50)
+     * que começa no dia {@code startDay} do cenário, como na troca de cultura ou solo (DP-06).
+     */
+    ManagementPlan startSecondPlanAt(int startDay) {
+        plan.close(TestData.scenarioDate(startDay - 1));
+        ManagementPlan second = TestData.managementPlan(areaId, crop.getId(), soil.getId(),
+                TestData.scenarioDate(startDay));
+        plans.save(second);
+        return second;
+    }
+
     /** Altera o fator F do plano (mesmo plano, como na atualização de parâmetros do Req 4.5). */
     void replacePlanWithFactor(String f) {
         plan.updateParameters(new AvailabilityFactor(bd(f)), plan.getSprinklerRate());

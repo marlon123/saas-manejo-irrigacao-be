@@ -180,7 +180,7 @@ Alterações nos agregados existentes (somente relaxamento e campos novos, com c
 - **Fórmulas** (as do `requirements.md`, em `BigDecimal`, sem `double` nem `float`):
   - `ETc = KC × ETP`
   - `CAD = 0,01 × (CC − PMP) × D × Z`
-  - `AFDi = CAD × F` no primeiro dia do plano. Nos demais, `AFDi = previousAfdFinal`.
+  - `AFDi = CAD × F` no primeiro dia do plano (a data de início do primeiro plano da área, decidido pelo serviço). Nos demais, inclusive no início de planos posteriores, `AFDi = previousAfdFinal`.
   - `AFDf = AFDi + (P + IR − ETc)`, sem limitar.
   - `I = AFDi − AFDf`, com sinal.
   - `recommended = (I > 0) E (não é o primeiro dia do plano)`.
@@ -257,7 +257,7 @@ Erros novos de domínio, derivados de `BusinessRuleException` ou próprios:
 4. Plano da data: nenhum plano na área (422); data anterior ao início do primeiro plano (400, A-03); data fora de qualquer plano (422).
 5. Balanço corrente já existente para a data (422, Requisito 11.7).
 6. Pré-condições de dados, **todas avaliadas e agregadas em uma resposta 422** (Requisito 11.5): meteorologia ausente, IR ausente (zero conta como presente), CC gravimétrico, PMP gravimétrico ou D ausentes no solo, KC ou Z ausentes na cultura.
-7. Histórico: fora do primeiro dia do plano, o primeiro dia sem balanço corrente entre o início do plano e o dia anterior (Requisito 7.8 e 8.4). Informa essa data.
+7. Histórico: fora do primeiro dia do plano, o primeiro dia sem balanço corrente entre o início do primeiro plano da área e o dia anterior (Requisito 7.8 e 8.4). Informa essa data. O "primeiro dia do plano" vale só para a data de início do primeiro plano da área; planos posteriores (por exemplo, após trocar cultura ou solo, DP-06) continuam a cadeia, com AFDi = AFDf do dia anterior, e a lacuna entre planos também gera 422.
 8. Cálculo e gravação.
 
 ## Data Models

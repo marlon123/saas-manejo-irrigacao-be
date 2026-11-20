@@ -143,15 +143,16 @@ public class WaterBalanceService {
         Crop crop = data.crop();
 
         // 7. Histórico (Req 7.8 e 8.4)
-        boolean firstDayOfPlan = date.equals(plan.getStartDate());
+        LocalDate firstPlanStart = firstPlanStart(areaId);
+        boolean firstDayOfPlan = date.equals(firstPlanStart);
         BigDecimal previousAfdFinal = null;
         if (!firstDayOfPlan) {
             LocalDate previousDay = date.minusDays(1);
-            Optional<LocalDate> gap = balances.firstMissingDate(areaId, plan.getStartDate(), previousDay);
+            Optional<LocalDate> gap = balances.firstMissingDate(areaId, firstPlanStart, previousDay);
             if (gap.isPresent()) {
                 throw new BusinessRuleException("Não há balanço calculado para a data " + gap.get()
-                        + ". Calcule os dias anteriores em ordem a partir do início do plano ("
-                        + plan.getStartDate() + ")");
+                        + ". Calcule os dias anteriores em ordem a partir do início do primeiro plano ("
+                        + firstPlanStart + ")");
             }
             previousAfdFinal = balances.findCurrent(areaId, previousDay)
                     .map(b -> b.result().afdFinal())
@@ -225,7 +226,7 @@ public class WaterBalanceService {
             ManagementPlan plan = resolvePlan(areaId, date);
             DayData data = loadDayData(areaId, date, plan);
 
-            boolean firstDayOfPlan = date.equals(plan.getStartDate());
+            boolean firstDayOfPlan = date.equals(firstPlanStart(areaId));
             BigDecimal previousAfdFinal = null;
             if (!firstDayOfPlan) {
                 LocalDate previousDay = date.minusDays(1);
@@ -334,15 +335,23 @@ public class WaterBalanceService {
     }
 
     /**
-     * Resolve o plano que cobre a data. Área sem plano: 422. Data anterior ao início do primeiro plano:
-     * 400 (A-03). Data fora de qualquer plano: 422.
+     * Data de início do primeiro plano (o mais antigo) da área. Só nesse dia vale o Primeiro_Dia_do_Plano
+     * (AFDi = CAD × F e sem recomendação). Área sem plano: 422.
      */
-    private ManagementPlan resolvePlan(UUID areaId, LocalDate date) {
+    private LocalDate firstPlanStart(UUID areaId) {
         List<ManagementPlan> all = plans.findByAreaOrderByStartDateDesc(areaId);
         if (all.isEmpty()) {
             throw new BusinessRuleException("A área " + areaId + " não possui plano de manejo");
         }
-        LocalDate firstStart = all.get(all.size() - 1).getStartDate();
+        return all.get(all.size() - 1).getStartDate();
+    }
+
+    /**
+     * Resolve o plano que cobre a data. Área sem plano: 422. Data anterior ao início do primeiro plano:
+     * 400 (A-03). Data fora de qualquer plano: 422.
+     */
+    private ManagementPlan resolvePlan(UUID areaId, LocalDate date) {
+        LocalDate firstStart = firstPlanStart(areaId);
         if (date.isBefore(firstStart)) {
             ViolationCollector v = new ViolationCollector();
             v.add("date", "não pode ser anterior ao início do primeiro plano de manejo da área (" + firstStart + ")");
