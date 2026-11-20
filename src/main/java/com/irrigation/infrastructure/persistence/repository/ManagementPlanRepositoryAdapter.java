@@ -26,8 +26,12 @@ public class ManagementPlanRepositoryAdapter implements ManagementPlanRepository
     private final ManagementPlanJpaRepository jpa;
     private final ManagementPlanPersistenceMapper mapper;
 
-    public ManagementPlanRepositoryAdapter(ManagementPlanJpaRepository jpa, ManagementPlanPersistenceMapper mapper) {
+    private final DailyWaterBalanceJpaRepository balanceJpa;
+
+    public ManagementPlanRepositoryAdapter(ManagementPlanJpaRepository jpa, ManagementPlanPersistenceMapper mapper,
+                                           DailyWaterBalanceJpaRepository balanceJpa) {
         this.jpa = jpa;
+        this.balanceJpa = balanceJpa;
         this.mapper = mapper;
     }
 
@@ -74,15 +78,13 @@ public class ManagementPlanRepositoryAdapter implements ManagementPlanRepository
     @Override
     @Transactional(readOnly = true)
     public boolean hasBalances(UUID planId) {
-        // A tabela de balanços diários só existe a partir da Fase 4; até lá nenhum plano tem balanços.
-        return false;
+        return balanceJpa.existsByManagementPlanId(planId);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Optional<LocalDate> lastCalculatedDate(UUID planId) {
-        // A tabela de balanços diários só existe a partir da Fase 4; até lá não há data calculada.
-        return Optional.empty();
+        return Optional.ofNullable(balanceJpa.findLastCurrentBalanceDate(planId));
     }
 
     private static boolean violatesActivePlanIndex(Throwable error) {

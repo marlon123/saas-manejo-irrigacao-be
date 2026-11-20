@@ -28,7 +28,7 @@ class MigrationIntegrationTest extends PostgresIntegrationTest {
         List<Map<String, Object>> history = jdbc.queryForList(
                 "SELECT version, success FROM flyway_schema_history WHERE version IS NOT NULL ORDER BY installed_rank");
 
-        assertThat(history).extracting(row -> row.get("version")).containsExactly("1", "2", "3", "4", "5");
+        assertThat(history).extracting(row -> row.get("version")).containsExactly("1", "2", "3", "4", "5", "6");
         assertThat(history).allSatisfy(row -> assertThat(row.get("success")).isEqualTo(true));
     }
 
@@ -96,7 +96,7 @@ class MigrationIntegrationTest extends PostgresIntegrationTest {
                 .queryForList("SELECT version, success FROM flyway_schema_history WHERE version IS NOT NULL "
                         + "ORDER BY installed_rank");
         assertThat(history).filteredOn(row -> Boolean.TRUE.equals(row.get("success")))
-                .extracting(row -> row.get("version")).containsExactly("1", "2", "3", "4", "5");
+                .extracting(row -> row.get("version")).containsExactly("1", "2", "3", "4", "5", "6");
     }
 
     /** Junta as mensagens de toda a cadeia de causas. */

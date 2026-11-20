@@ -1,5 +1,6 @@
 package com.irrigation.support;
 
+import com.irrigation.domain.model.DailyWaterBalance;
 import com.irrigation.domain.model.ManagementPlan;
 import com.irrigation.domain.repository.ManagementPlanRepository;
 
@@ -23,6 +24,7 @@ public class InMemoryManagementPlanRepository implements ManagementPlanRepositor
 
     private final Map<UUID, ManagementPlan> store = new LinkedHashMap<>();
     private final Map<UUID, LocalDate> lastBalanceDates = new HashMap<>();
+    private InMemoryDailyWaterBalanceRepository balances;
 
     @Override
     public ManagementPlan save(ManagementPlan plan) {
@@ -59,14 +61,33 @@ public class InMemoryManagementPlanRepository implements ManagementPlanRepositor
                 .findFirst();
     }
 
+    /**
+     * Conecta o repositório de balanços em memória: {@code hasBalances} e {@code lastCalculatedDate} passam a
+     * considerar também os balanços reais dele (além dos fictícios de {@link #registerBalance}).
+     */
+    public InMemoryManagementPlanRepository connectBalances(InMemoryDailyWaterBalanceRepository balances) {
+        this.balances = balances;
+        return this;
+    }
+
     @Override
     public boolean hasBalances(UUID planId) {
-        return lastBalanceDates.containsKey(planId);
+        return lastBalanceDates.containsKey(planId)
+                || (balances != null && !balances.findByPlan(planId).isEmpty());
     }
 
     @Override
     public Optional<LocalDate> lastCalculatedDate(UUID planId) {
-        return Optional.ofNullable(lastBalanceDates.get(planId));
+        LocalDate fake = lastBalanceDates.get(planId);
+        LocalDate real = balances == null ? null : balances.findByPlan(planId).stream()
+                .filter(DailyWaterBalance::current)
+                .map(DailyWaterBalance::date)
+                .max(Comparator.naturalOrder())
+                .orElse(null);
+        if (fake == null) {
+            return Optional.ofNullable(real);
+        }
+        return Optional.of(real != null && real.isAfter(fake) ? real : fake);
     }
 
     /** Registra um balanço fictício do plano na data; mantém a maior data como a última calculada. */

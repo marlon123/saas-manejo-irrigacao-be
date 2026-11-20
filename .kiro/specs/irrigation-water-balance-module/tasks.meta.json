@@ -676,6 +676,348 @@
         "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
         "timestamp": 1795125236152
       }
+    ],
+    "16.1 Criar `V6__daily_water_balance.sql`": [
+      {
+        "executionId": "c0b0de10-d8e9-4127-95a4-515f94b4315a",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795126350426
+      },
+      {
+        "executionId": "c0b0de10-d8e9-4127-95a4-515f94b4315a",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795126435839
+      }
+    ],
+    "17.1 Criar as exceções de domínio": [
+      {
+        "executionId": "c0b0de10-d8e9-4127-95a4-515f94b4315a",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795126350858
+      },
+      {
+        "executionId": "c0b0de10-d8e9-4127-95a4-515f94b4315a",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795126432647
+      }
+    ],
+    "17.2 Criar o agregado imutável `DailyWaterBalance`": [
+      {
+        "executionId": "c0b0de10-d8e9-4127-95a4-515f94b4315a",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795126351145
+      },
+      {
+        "executionId": "c0b0de10-d8e9-4127-95a4-515f94b4315a",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795126433886
+      }
+    ],
+    "16. Migração V6": [
+      {
+        "executionId": "c0b0de10-d8e9-4127-95a4-515f94b4315a",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795126436115
+      }
+    ],
+    "17.3 Criar as portas `DailyWaterBalanceRepository` e `AreaOperationLock`": [
+      {
+        "executionId": "c0b0de10-d8e9-4127-95a4-515f94b4315a",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795126439792
+      },
+      {
+        "executionId": "c0b0de10-d8e9-4127-95a4-515f94b4315a",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795126573092
+      }
+    ],
+    "18.1 Criar `DailyWaterBalanceEntity`, `DailyWaterBalanceJpaRepository` e o mapeador manual": [
+      {
+        "executionId": "c0b0de10-d8e9-4127-95a4-515f94b4315a",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795126440171
+      },
+      {
+        "executionId": "c0b0de10-d8e9-4127-95a4-515f94b4315a",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795126575008
+      }
+    ],
+    "19.1 Criar DTOs de saída do balanço": [
+      {
+        "executionId": "c0b0de10-d8e9-4127-95a4-515f94b4315a",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795126440469
+      },
+      {
+        "executionId": "c0b0de10-d8e9-4127-95a4-515f94b4315a",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795126575843
+      }
+    ],
+    "17. Domínio e portas": [
+      {
+        "executionId": "c0b0de10-d8e9-4127-95a4-515f94b4315a",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795126573510
+      }
+    ],
+    "18.2 Criar `DailyWaterBalanceRepositoryAdapter`": [
+      {
+        "executionId": "c0b0de10-d8e9-4127-95a4-515f94b4315a",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795126578581
+      },
+      {
+        "executionId": "c0b0de10-d8e9-4127-95a4-515f94b4315a",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795126722045
+      }
+    ],
+    "18.3 Criar o `AreaOperationLock` baseado em `pg_try_advisory_xact_lock`": [
+      {
+        "executionId": "c0b0de10-d8e9-4127-95a4-515f94b4315a",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795126578959
+      },
+      {
+        "executionId": "c0b0de10-d8e9-4127-95a4-515f94b4315a",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795126723249
+      }
+    ],
+    "19.2 Implementar `WaterBalanceService.calculate`": [
+      {
+        "executionId": "c0b0de10-d8e9-4127-95a4-515f94b4315a",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795126579213
+      },
+      {
+        "executionId": "c0b0de10-d8e9-4127-95a4-515f94b4315a",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795126724411
+      }
+    ],
+    "19.4 Implementar `WaterBalanceQueryService`": [
+      {
+        "executionId": "c0b0de10-d8e9-4127-95a4-515f94b4315a",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795126579449
+      },
+      {
+        "executionId": "c0b0de10-d8e9-4127-95a4-515f94b4315a",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795126725281
+      }
+    ],
+    "18. Infraestrutura": [
+      {
+        "executionId": "c0b0de10-d8e9-4127-95a4-515f94b4315a",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795126723520
+      }
+    ],
+    "19.3 Implementar `WaterBalanceService.reprocess` (tudo-ou-nada)": [
+      {
+        "executionId": "c0b0de10-d8e9-4127-95a4-515f94b4315a",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795126726280
+      },
+      {
+        "executionId": "c0b0de10-d8e9-4127-95a4-515f94b4315a",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795126826768
+      }
+    ],
+    "19. Aplicação": [
+      {
+        "executionId": "c0b0de10-d8e9-4127-95a4-515f94b4315a",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795126827030
+      }
+    ],
+    "20.1 Criar repositórios em memória do balanço, `AreaOperationLock` falso e falha injetável": [
+      {
+        "executionId": "c0b0de10-d8e9-4127-95a4-515f94b4315a",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795126827277
+      },
+      {
+        "executionId": "c0b0de10-d8e9-4127-95a4-515f94b4315a",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795126988733
+      }
+    ],
+    "20.3 Escrever testes do mapeador de persistência do balanço": [
+      {
+        "executionId": "c0b0de10-d8e9-4127-95a4-515f94b4315a",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795126827493
+      },
+      {
+        "executionId": "c0b0de10-d8e9-4127-95a4-515f94b4315a",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795126989170
+      }
+    ],
+    "20.2 Escrever testes unitários de `WaterBalanceService` e `WaterBalanceQueryService`": [
+      {
+        "executionId": "c0b0de10-d8e9-4127-95a4-515f94b4315a",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795126989556
+      },
+      {
+        "executionId": "c0b0de10-d8e9-4127-95a4-515f94b4315a",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795131498521
+      }
+    ],
+    "20.4 Escrever teste de propriedade para o round trip de persistência do balanço": [
+      {
+        "executionId": "c0b0de10-d8e9-4127-95a4-515f94b4315a",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795126990202
+      },
+      {
+        "executionId": "c0b0de10-d8e9-4127-95a4-515f94b4315a",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795131498851
+      }
+    ],
+    "20.5 Escrever teste de propriedade para a coleta completa de violações": [
+      {
+        "executionId": "c0b0de10-d8e9-4127-95a4-515f94b4315a",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795126992351
+      },
+      {
+        "executionId": "c0b0de10-d8e9-4127-95a4-515f94b4315a",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795131499433
+      }
+    ],
+    "20.6 Escrever teste de propriedade para a consulta por período": [
+      {
+        "executionId": "c0b0de10-d8e9-4127-95a4-515f94b4315a",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795126992727
+      },
+      {
+        "executionId": "c0b0de10-d8e9-4127-95a4-515f94b4315a",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795131500200
+      }
+    ],
+    "20.7 Escrever teste de propriedade para as pré-condições agregadas do cálculo": [
+      {
+        "executionId": "c0b0de10-d8e9-4127-95a4-515f94b4315a",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795126993081
+      },
+      {
+        "executionId": "c0b0de10-d8e9-4127-95a4-515f94b4315a",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795131500999
+      }
+    ],
+    "20.8 Escrever teste de propriedade para a lacuna no histórico": [
+      {
+        "executionId": "c0b0de10-d8e9-4127-95a4-515f94b4315a",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795131501814
+      },
+      {
+        "executionId": "c0b0de10-d8e9-4127-95a4-515f94b4315a",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795131916530
+      }
+    ],
+    "20.9 Escrever teste de propriedade para o cálculo repetido que não duplica o corrente": [
+      {
+        "executionId": "c0b0de10-d8e9-4127-95a4-515f94b4315a",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795131503811
+      },
+      {
+        "executionId": "c0b0de10-d8e9-4127-95a4-515f94b4315a",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795131916994
+      }
+    ],
+    "20.10 Escrever teste de propriedade para a imutabilidade do histórico frente a alterações de cadastro": [
+      {
+        "executionId": "c0b0de10-d8e9-4127-95a4-515f94b4315a",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795131504085
+      },
+      {
+        "executionId": "c0b0de10-d8e9-4127-95a4-515f94b4315a",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795131917575
+      }
+    ],
+    "20.11 Escrever teste de propriedade para o reprocessamento equivalente à cadeia recalculada": [
+      {
+        "executionId": "c0b0de10-d8e9-4127-95a4-515f94b4315a",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795131506178
+      },
+      {
+        "executionId": "c0b0de10-d8e9-4127-95a4-515f94b4315a",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795131917973
+      }
+    ],
+    "20.12 Escrever teste de propriedade para o reprocessamento tudo-ou-nada": [
+      {
+        "executionId": "c0b0de10-d8e9-4127-95a4-515f94b4315a",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795131506353
+      },
+      {
+        "executionId": "c0b0de10-d8e9-4127-95a4-515f94b4315a",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795131918824
+      }
+    ],
+    "20.13 Escrever teste de propriedade para o histórico de revisões": [
+      {
+        "executionId": "c0b0de10-d8e9-4127-95a4-515f94b4315a",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795131506497
+      },
+      {
+        "executionId": "c0b0de10-d8e9-4127-95a4-515f94b4315a",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795131919589
+      }
+    ],
+    "20.14 Escrever testes de integração da V6 e da persistência do balanço": [
+      {
+        "executionId": "c0b0de10-d8e9-4127-95a4-515f94b4315a",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795131920462
+      },
+      {
+        "executionId": "c0b0de10-d8e9-4127-95a4-515f94b4315a",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795133320697
+      }
+    ],
+    "20. Testes da Fase 4": [
+      {
+        "executionId": "c0b0de10-d8e9-4127-95a4-515f94b4315a",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795133321434
+      }
+    ],
+    "21. Checkpoint da Fase 4: build, testes e relatórios": [
+      {
+        "executionId": "c0b0de10-d8e9-4127-95a4-515f94b4315a",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795133327292
+      }
     ]
   }
 }

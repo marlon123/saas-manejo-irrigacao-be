@@ -111,7 +111,8 @@ public class SoilProfileService {
 
     /**
      * Valida um par "ambos ou nenhum" com CC maior que PMP. O par incompleto é decidido pelos valores brutos
-     * (um valor presente e inválido já gerou a própria violação) e é reportado nos dois campos do par.
+     * (um valor presente e inválido já gerou a própria violação) e é reportado nos dois campos do par, sem
+     * repetir o campo que já tem violação (Propriedade 13).
      * A relação CC &gt; PMP só é avaliada quando os dois valores individuais são válidos.
      */
     private static void checkPair(ViolationCollector v, String fieldCapacityName, BigDecimal rawFieldCapacity,
@@ -120,8 +121,13 @@ public class SoilProfileService {
         if ((rawFieldCapacity == null) != (rawWiltingPoint == null)) {
             String message = "par incompleto: " + fieldCapacityName + " e " + wiltingPointName
                     + " devem ser informados em conjunto";
-            v.add(fieldCapacityName, message);
-            v.add(wiltingPointName, message);
+            // Um valor presente e inválido já foi reportado pela própria faixa: o campo não é repetido.
+            if (!v.hasViolation(fieldCapacityName)) {
+                v.add(fieldCapacityName, message);
+            }
+            if (!v.hasViolation(wiltingPointName)) {
+                v.add(wiltingPointName, message);
+            }
         } else if (bothValid) {
             // Req 1.9: CC deve ser maior que PMP
             v.check(fieldCapacityName, relationCheck);

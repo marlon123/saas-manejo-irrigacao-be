@@ -9,7 +9,7 @@ O plano tem 7 fases, na ordem do item 8 do `requirements.md` e do "Plano de entr
 - [x] Fase 1: Cadastros opcionais e migração V4 (Solo, Cultura e Área), com a revisão dos testes afetados (A-01)
 - [x] Fase 2: Value objects, `WaterBalanceCalculator` puro e `PresentationRounding`
 - [x] Fase 3: Plano de Manejo, meteorologia e Irrigação Real (migração V5, domínio, persistência e serviços)
-- [ ] Fase 4: Balanço diário imutável (migração V6), cálculo, reprocessamento e consulta (domínio, persistência e serviços)
+- [x] Fase 4: Balanço diário imutável (migração V6), cálculo, reprocessamento e consulta (domínio, persistência e serviços)
 - [ ] Fase 5: Controladores, DTOs, tratamento de erros e OpenAPI
 - [ ] Fase 6: Testes de integração ponta a ponta, ArchUnit e cobertura
 - [ ] Fase 7: README e ADR-006
@@ -265,98 +265,98 @@ O plano tem 7 fases, na ordem do item 8 do `requirements.md` e do "Plano de entr
 
 **Fase 4: Balanço diário imutável, cálculo e reprocessamento**
 
-- [ ] 16. Migração V6
-  - [ ] 16.1 Criar `V6__daily_water_balance.sql`
+- [x] 16. Migração V6
+  - [x] 16.1 Criar `V6__daily_water_balance.sql`
     - Tabela `daily_water_balance` sem `updated_at`, com identificação, snapshot das entradas (mesma escala da coluna de origem), resultados (ETc, CAD, AFDi, AFDf e I em `NUMERIC` sem escala e sem CHECK de sinal; `operating_time_hours NUMERIC(24,10)` com `>= 0`) e controle (`calculated_at`, metodologia, `revision >= 1`, `is_current`). FKs `RESTRICT`
     - Índice único parcial `uq_daily_water_balance_current ON (area_id, balance_date) WHERE is_current`, `UNIQUE (area_id, balance_date, revision)` e índice `(area_id, balance_date)`
     - Trigger `BEFORE DELETE` que sempre rejeita e `BEFORE UPDATE` que rejeita qualquer mudança, exceto a passagem de `is_current` de `true` para `false`, com `ERRCODE` de violação de restrição
     - _Requisitos: 12.1, 12.2, 12.3, 12.4, 12.7, 12.8, 12.9, 12.11, 16.3_
 
-- [ ] 17. Domínio e portas
-  - [ ] 17.1 Criar as exceções de domínio
+- [x] 17. Domínio e portas
+  - [x] 17.1 Criar as exceções de domínio
     - `PreconditionsNotMetException` (data e lista de pré-condições com `code`, `message` e `fields`; códigos `WEATHER_MISSING`, `APPLIED_IRRIGATION_MISSING`, `SOIL_FIELDS_MISSING`, `CROP_FIELDS_MISSING`), `ConflictException` e `ImmutableRecordException`
     - _Requisitos: 11.1, 11.2, 11.3, 11.4, 11.5, 12.8, 12.10, 13.8_
-  - [ ] 17.2 Criar o agregado imutável `DailyWaterBalance`
+  - [x] 17.2 Criar o agregado imutável `DailyWaterBalance`
     - Identificação, `WaterBalanceInputs` como snapshot, `WaterBalanceResult`, `calculatedAt`, `methodologyId`, `methodologyVersion`, `revision` e `current`. Única mudança permitida: `markNotCurrent()`, que devolve uma cópia
     - _Requisitos: 12.1, 12.2, 12.3, 12.4, 12.7, 13.2_
-  - [ ] 17.3 Criar as portas `DailyWaterBalanceRepository` e `AreaOperationLock`
+  - [x] 17.3 Criar as portas `DailyWaterBalanceRepository` e `AreaOperationLock`
     - `insert`, `insertAll`, `findCurrent`, `findCurrentFrom`, `findCurrentByPeriod` com paginação, `countCurrentByPeriod`, `findRevisions` (revisão decrescente), `markNotCurrent(areaId, fromDate)` em lote e `firstMissingDate`. Sem operação de atualização de valores nem de exclusão. `AreaOperationLock.tryLock(areaId)`
     - _Requisitos: 12.7, 13.2, 13.6, 14.1_
 
-- [ ] 18. Infraestrutura
-  - [ ] 18.1 Criar `DailyWaterBalanceEntity`, `DailyWaterBalanceJpaRepository` e o mapeador manual
+- [x] 18. Infraestrutura
+  - [x] 18.1 Criar `DailyWaterBalanceEntity`, `DailyWaterBalanceJpaRepository` e o mapeador manual
     - Todas as colunas `updatable = false`, exceto `is_current`, que só muda por consulta em lote. ETc, CAD, AFDi, AFDf e I sem escala fixa; leitura sem perda de casas
     - _Requisitos: 12.1, 12.2, 12.3, 12.4, 12.11_
-  - [ ] 18.2 Criar `DailyWaterBalanceRepositoryAdapter`
+  - [x] 18.2 Criar `DailyWaterBalanceRepositoryAdapter`
     - `firstMissingDate` com `generate_series` e `LEFT JOIN` nos balanços correntes com `LIMIT 1`. Violação do índice de balanço corrente vira `ConflictException`. Erro do trigger de imutabilidade vira `ImmutableRecordException`
     - _Requisitos: 7.8, 8.4, 12.8, 12.9, 12.10_
-  - [ ] 18.3 Criar o `AreaOperationLock` baseado em `pg_try_advisory_xact_lock`
+  - [x] 18.3 Criar o `AreaOperationLock` baseado em `pg_try_advisory_xact_lock`
     - Chave de duas partes (inteiro fixo do módulo e hash do UUID da área), com escopo de transação
     - _Requisitos: 12.10, 13.8_
 
-- [ ] 19. Aplicação
-  - [ ] 19.1 Criar DTOs de saída do balanço
+- [x] 19. Aplicação
+  - [x] 19.1 Criar DTOs de saída do balanço
     - `WaterBalanceOutput`, `WaterBalanceInputsOutput` e demais records de `application.dto`, aplicando `PresentationRounding`. `idealIrrigationMm` e `appliedIrrigationMm` em campos distintos
     - _Requisitos: 9.5, 14.6, 15.7_
-  - [ ] 19.2 Implementar `WaterBalanceService.calculate`
+  - [x] 19.2 Implementar `WaterBalanceService.calculate`
     - Ordem: formato (400, `ViolationCollector`), área (404), bloqueio (409), plano da data (A-03: 400 antes do primeiro plano, 422 sem plano), duplicidade (422), pré-condições de dados agregadas em uma resposta 422 (IR zero conta como presente), lacuna de histórico (422 com a primeira data sem cálculo), cálculo e gravação como revisão 1 corrente
     - `Clock` injetável para `calculated_at`. Valores gravados sem arredondamento. Nada parcial persistido em caso de falha
     - _Requisitos: 7.1, 7.2, 7.3, 7.4, 7.5, 7.6, 7.7, 7.8, 7.9, 8.4, 10.4, 10.5, 11.1, 11.2, 11.3, 11.4, 11.5, 11.6, 11.7, 11.8, 12.1, 12.2, 12.3, 12.4, 12.5, 15.8_
-  - [ ] 19.3 Implementar `WaterBalanceService.reprocess` (tudo-ou-nada)
+  - [x] 19.3 Implementar `WaterBalanceService.reprocess` (tudo-ou-nada)
     - Formato (400), área (404), bloqueio (409), data inicial com revisão corrente (422). Cálculo da cadeia inteira em memória, com cadastros, meteorologia e IR atuais. Qualquer pré-condição violada aborta com 422 e a data violadora, sem gravar nada. Em sucesso, uma transação marca as correntes como não correntes e insere as revisões n+1. Dias nunca calculados não são calculados
     - _Requisitos: 13.1, 13.2, 13.3, 13.4, 13.5, 13.7, 13.8, 15.10_
-  - [ ] 19.4 Implementar `WaterBalanceQueryService`
+  - [x] 19.4 Implementar `WaterBalanceQueryService`
     - Consulta por período (correntes, paginada, `from` e `to` opcionais, página 0, tamanho 20, máximo 100, valores inválidos geram 400 sem ajuste), por data (404 sem cálculo) e histórico de revisões (ordem decrescente). 404 para área inexistente
     - _Requisitos: 13.6, 14.1, 14.2, 14.3, 14.4, 14.5, 14.6, 14.7, 14.8_
 
-- [ ] 20. Testes da Fase 4
-  - [ ] 20.1 Criar repositórios em memória do balanço, `AreaOperationLock` falso e falha injetável
+- [x] 20. Testes da Fase 4
+  - [x] 20.1 Criar repositórios em memória do balanço, `AreaOperationLock` falso e falha injetável
     - `InMemoryDailyWaterBalanceRepository` que modela o índice único parcial, aceita falha injetada em ponto escolhido da gravação e desfaz tudo ao falhar (para a Propriedade 21)
     - _Requisitos: 12.5, 13.5_
-  - [ ] 20.2 Escrever testes unitários de `WaterBalanceService` e `WaterBalanceQueryService`
+  - [x] 20.2 Escrever testes unitários de `WaterBalanceService` e `WaterBalanceQueryService`
     - Ordem 400, 404, 409, 422; cada pré-condição isolada e agregada; duplicidade; histórico ausente; A-03; Cenário A completo pelo serviço (7 dias, valores persistidos conferidos com `compareTo`); Cenário B; Cenário D; Cenário E (revisões antigas preservadas e não correntes); reprocesso com data não calculada; F alterado depois do cálculo não muda o balanço
     - _Requisitos: 7.1, 7.2, 7.5, 7.6, 7.7, 7.8, 8.4, 11.1, 11.2, 11.3, 11.4, 11.5, 11.6, 11.7, 12.6, 13.1, 13.2, 13.4, 13.7_
-  - [ ] 20.3 Escrever testes do mapeador de persistência do balanço
+  - [x] 20.3 Escrever testes do mapeador de persistência do balanço
     - Valores com escala 13 em AFDi e AFDf, `compareTo` em vez de `equals`
     - _Requisitos: 12.11_
-  - [ ] 20.4 Escrever teste de propriedade para o round trip de persistência do balanço
+  - [x] 20.4 Escrever teste de propriedade para o round trip de persistência do balanço
     - **Propriedade 10: Round trip de persistência do balanço**
     - **Valida: Requisitos 12.1, 12.2, 12.3, 12.4, 12.11**
-  - [ ] 20.5 Escrever teste de propriedade para a coleta completa de violações
+  - [x] 20.5 Escrever teste de propriedade para a coleta completa de violações
     - **Propriedade 13: Coleta completa de violações**
     - **Valida: Requisitos 4.5, 5.4, 5.5, 6.2, 6.6, 7.4, 1.9, 2.10**
     - Requisições de plano, meteorologia, IR e cálculo com subconjuntos arbitrários de campos inválidos ou ausentes
-  - [ ] 20.6 Escrever teste de propriedade para a consulta por período
+  - [x] 20.6 Escrever teste de propriedade para a consulta por período
     - **Propriedade 15: Consulta por período**
     - **Valida: Requisitos 5.9, 5.10, 6.10, 13.6, 14.1, 14.4, 14.8**
-  - [ ] 20.7 Escrever teste de propriedade para as pré-condições agregadas do cálculo
+  - [x] 20.7 Escrever teste de propriedade para as pré-condições agregadas do cálculo
     - **Propriedade 16: Pré-condições agregadas do cálculo**
     - **Valida: Requisitos 1.12, 2.8, 7.7, 11.1, 11.2, 11.3, 11.4, 11.5**
-  - [ ] 20.8 Escrever teste de propriedade para a lacuna no histórico
+  - [x] 20.8 Escrever teste de propriedade para a lacuna no histórico
     - **Propriedade 17: Lacuna no histórico**
     - **Valida: Requisitos 7.8, 8.4**
-  - [ ] 20.9 Escrever teste de propriedade para o cálculo repetido que não duplica o corrente
+  - [x] 20.9 Escrever teste de propriedade para o cálculo repetido que não duplica o corrente
     - **Propriedade 18: Cálculo repetido não duplica o corrente**
     - **Valida: Requisitos 11.7, 12.9, 13.2**
-  - [ ] 20.10 Escrever teste de propriedade para a imutabilidade do histórico frente a alterações de cadastro
+  - [x] 20.10 Escrever teste de propriedade para a imutabilidade do histórico frente a alterações de cadastro
     - **Propriedade 19: Imutabilidade do histórico frente a alterações de cadastro**
     - **Valida: Requisitos 4.9, 5.8, 6.9, 12.6, 12.7**
-  - [ ] 20.11 Escrever teste de propriedade para o reprocessamento equivalente à cadeia recalculada
+  - [x] 20.11 Escrever teste de propriedade para o reprocessamento equivalente à cadeia recalculada
     - **Propriedade 20: Reprocessamento equivale à cadeia recalculada**
     - **Valida: Requisitos 13.1, 13.2, 13.3, 12.7**
     - Inclui o caso "sem mudança de dados reproduz os mesmos valores" (cenário de idempotência do `requirements.md`, seção 7.2)
-  - [ ] 20.12 Escrever teste de propriedade para o reprocessamento tudo-ou-nada
+  - [x] 20.12 Escrever teste de propriedade para o reprocessamento tudo-ou-nada
     - **Propriedade 21: Reprocessamento tudo-ou-nada**
     - **Valida: Requisitos 13.4, 13.5, 7.2, 12.5**
     - Inclui falha injetada em qualquer ponto da gravação
-  - [ ] 20.13 Escrever teste de propriedade para o histórico de revisões
+  - [x] 20.13 Escrever teste de propriedade para o histórico de revisões
     - **Propriedade 22: Histórico de revisões**
     - **Valida: Requisitos 13.6**
-  - [ ] 20.14 Escrever testes de integração da V6 e da persistência do balanço
+  - [x] 20.14 Escrever testes de integração da V6 e da persistência do balanço
     - Migração V5 para V6, índices e CHECKs; trigger: `UPDATE` e `DELETE` diretos rejeitados, exceto `is_current` de `true` para `false`; round trip com escala 13 em AFDi e AFDf; `firstMissingDate`; `markNotCurrent` em lote; dois cálculos concorrentes da mesma área e data (um 201 e um 409 ou 422, uma linha corrente); reprocessamentos concorrentes (409); rollback completo quando a gravação falha no meio
     - _Requisitos: 12.5, 12.7, 12.8, 12.9, 12.10, 12.11, 13.5, 13.8, 16.4_
 
-- [ ] 21. Checkpoint da Fase 4: build, testes e relatórios
+- [x] 21. Checkpoint da Fase 4: build, testes e relatórios
   - Rodar `clean test integrationTest jacocoTestCoverageVerification`, conferir contagens nos XML, ausência de falhas e de testes pulados, e cobertura de linha do JaCoCo (mínimo de 80%)
   - Informar o que foi feito, as decisões (inclusive DD-01 a DD-07 e A-06) e as pendências. **Aguardar aprovação antes da Fase 5**
 

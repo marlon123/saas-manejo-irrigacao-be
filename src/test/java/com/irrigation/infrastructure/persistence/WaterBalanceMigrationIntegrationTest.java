@@ -266,6 +266,6 @@ class WaterBalanceMigrationIntegrationTest extends PostgresIntegrationTest {
                 + "AND success", Integer.class)).isZero();
         assertThat(snapshot()).isEqualTo(before);
         assertThat(db.queryForObject("SELECT max(version::int) FROM flyway_schema_history WHERE success",
-                Integer.class)).as("a V5 é aplicada antes da V99 e permanece").isEqualTo(5);
+                Integer.class)).as("a V5 e a V6 são aplicadas antes da V99 e permanecem").isEqualTo(6);
     }
 }

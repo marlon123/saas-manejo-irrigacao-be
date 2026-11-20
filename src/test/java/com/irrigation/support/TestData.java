@@ -12,7 +12,12 @@ import com.irrigation.domain.model.DailyWeather;
 import com.irrigation.domain.model.ManagementPlan;
 import com.irrigation.domain.model.valueobjects.AppliedIrrigationDepth;
 import com.irrigation.domain.model.valueobjects.AvailabilityFactor;
+import com.irrigation.domain.model.DailyWaterBalance;
+import com.irrigation.domain.model.valueobjects.CycleDay;
 import com.irrigation.domain.model.valueobjects.EtpDepth;
+import com.irrigation.domain.model.valueobjects.GravimetricWaterContent;
+import com.irrigation.domain.waterbalance.WaterBalanceInputs;
+import com.irrigation.domain.waterbalance.WaterBalanceResult;
 import com.irrigation.domain.model.valueobjects.PrecipitationDepth;
 import com.irrigation.domain.model.valueobjects.SprinklerRate;
 import com.irrigation.application.dto.SoilProfileInput;
@@ -164,5 +169,93 @@ public final class TestData {
 
     public static AppliedIrrigationInput appliedIrrigationInput(LocalDate date, String depthMm) {
         return new AppliedIrrigationInput(date, bd(depthMm));
+    }
+
+    // ------------------------------------------------ Balanço hídrico (Fase 4)
+
+    /** Dia 1 da série do Cenário A (requirements.md, seção 7); os 7 dias terminam antes de {@link #TODAY}. */
+    public static final LocalDate SCENARIO_START = LocalDate.of(2026, 11, 1);
+
+    /** ETP dos dias 1 a 7 do Cenário A (mm). */
+    public static final List<String> SCENARIO_A_ETP = List.of("5.00", "6.25", "7.50", "6.25", "10.00", "5.00", "15.00");
+    /** P dos dias 1 a 7 do Cenário A (mm). */
+    public static final List<String> SCENARIO_A_PRECIPITATION = List.of("0", "0", "2", "0", "0", "0", "0");
+    /** IR dos dias 1 a 7 do Cenário A (mm). */
+    public static final List<String> SCENARIO_A_IRRIGATION = List.of("0", "0", "5", "0", "12", "0", "0");
+    /** TR (dia do ciclo) informado nos dias 1 a 7 do Cenário A. */
+    public static final List<Integer> SCENARIO_A_CYCLE_DAYS = List.of(1, 2, 3, 1, 2, 3, 1);
+    /** AFDi esperada nos dias 1 a 7 do Cenário A (mm). */
+    public static final List<String> SCENARIO_A_AFD_INITIAL = List.of("36", "32", "27", "28", "23", "27", "23");
+    /** AFDf esperada nos dias 1 a 7 do Cenário A (mm). */
+    public static final List<String> SCENARIO_A_AFD_FINAL = List.of("32", "27", "28", "23", "27", "23", "11");
+    /** I = AFDi − AFDf esperada nos dias 1 a 7 do Cenário A (mm). */
+    public static final List<String> SCENARIO_A_IDEAL_IRRIGATION = List.of("4", "5", "-1", "5", "-4", "4", "12");
+
+    /** Data do dia {@code dayNumber} (1 a n) da série dos cenários. */
+    public static LocalDate scenarioDate(int dayNumber) {
+        return SCENARIO_START.plusDays(dayNumber - 1L);
+    }
+
+    /** Solo do Cenário A: CC = 30 %, PMP = 15 % (gravimétricos), D = 1,2 g/cm³; CAD = 72 mm com Z = 400 mm. */
+    public static SoilProfile scenarioSoilProfile() {
+        return new SoilProfile(UUID.randomUUID(), "Cenário A", null, null,
+                new GravimetricWaterContent(bd("30")), new GravimetricWaterContent(bd("15")),
+                new BulkDensity(bd("1.2")), null, null, null, null, null, null);
+    }
+
+    /** Cultura do Cenário A: KC = 0,8 e Z = 400 mm. */
+    public static Crop scenarioCrop() {
+        return new Crop(UUID.randomUUID(), "Cultura do Cenário A", null, 120, List.of(),
+                new Kc(bd("0.8")), new RootDepth(bd("400")));
+    }
+
+    /** Plano do Cenário A: F = 0,50 e taxa do aspersor = 6 mm/h, ativo desde {@link #SCENARIO_START}. */
+    public static ManagementPlan scenarioPlan(UUID areaId, UUID cropId, UUID soilProfileId) {
+        return new ManagementPlan(UUID.randomUUID(), areaId, cropId, soilProfileId, SCENARIO_START,
+                new AvailabilityFactor(bd("0.5")), new SprinklerRate(bd("6")));
+    }
+
+    /** Meteorologia dos {@code days} primeiros dias do Cenário A (1 a 7). */
+    public static List<DailyWeather> scenarioWeather(UUID areaId, int days) {
+        List<DailyWeather> list = new java.util.ArrayList<>();
+        for (int i = 0; i < days; i++) {
+            list.add(dailyWeather(areaId, scenarioDate(i + 1), SCENARIO_A_ETP.get(i),
+                    SCENARIO_A_PRECIPITATION.get(i)));
+        }
+        return list;
+    }
+
+    /** Irrigação aplicada dos {@code days} primeiros dias do Cenário A; só os dias com IR maior que zero. */
+    public static List<AppliedIrrigation> scenarioAppliedIrrigations(UUID areaId, int days) {
+        List<AppliedIrrigation> list = new java.util.ArrayList<>();
+        for (int i = 0; i < days; i++) {
+            if (bd(SCENARIO_A_IRRIGATION.get(i)).signum() > 0) {
+                list.add(appliedIrrigation(areaId, scenarioDate(i + 1), SCENARIO_A_IRRIGATION.get(i)));
+            }
+        }
+        return list;
+    }
+
+    /**
+     * Balanço fictício, mas consistente, para testes de repositório: entradas e resultados mínimos válidos.
+     * Use {@code current = false} e revisões maiores para simular o histórico.
+     */
+    public static DailyWaterBalance dailyWaterBalance(UUID areaId, UUID cropId, UUID soilProfileId, UUID planId,
+                                                      LocalDate date, int revision, boolean current) {
+        boolean first = false;
+        WaterBalanceInputs inputs = new WaterBalanceInputs(
+                new EtpDepth(bd("5")), new PrecipitationDepth(bd("0")), new AppliedIrrigationDepth(bd("0")),
+                new GravimetricWaterContent(bd("30")), new GravimetricWaterContent(bd("15")),
+                new BulkDensity(bd("1.2")), new RootDepth(bd("400")), new Kc(bd("0.8")),
+                new AvailabilityFactor(bd("0.5")), new SprinklerRate(bd("6")), first, bd("36"));
+        WaterBalanceResult result = new WaterBalanceResult(bd("4"), bd("72"), bd("36"), bd("32"), bd("4"),
+                true, null, bd("0.6666666667"));
+        return new DailyWaterBalance(UUID.randomUUID(), areaId, date, cropId, soilProfileId, planId,
+                new CycleDay(1), inputs, result, fixedClock().instant(), "water-balance", "1.0", revision, current);
+    }
+
+    /** Balanço corrente, revisão 1. */
+    public static DailyWaterBalance dailyWaterBalance(UUID areaId, UUID planId, LocalDate date) {
+        return dailyWaterBalance(areaId, UUID.randomUUID(), UUID.randomUUID(), planId, date, 1, true);
     }
 }

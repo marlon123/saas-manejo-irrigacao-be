@@ -68,6 +68,11 @@ public final class ViolationCollector {
         }
     }
 
+    /** Indica se o campo já tem alguma violação registrada. */
+    public boolean hasViolation(String field) {
+        return violations.stream().anyMatch(v -> v.field().equals(field));
+    }
+
     public boolean hasViolations() {
         return !violations.isEmpty();
     }
