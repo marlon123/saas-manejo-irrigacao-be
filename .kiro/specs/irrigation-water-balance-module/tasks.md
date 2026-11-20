@@ -12,7 +12,7 @@ O plano tem 7 fases, na ordem do item 8 do `requirements.md` e do "Plano de entr
 - [x] Fase 4: Balanço diário imutável (migração V6), cálculo, reprocessamento e consulta (domínio, persistência e serviços)
 - [x] Fase 5: Controladores, DTOs, tratamento de erros e OpenAPI
 - [x] Fase 6: Testes de integração ponta a ponta, ArchUnit e cobertura
-- [ ] Fase 7: README e ADR-006
+- [x] Fase 7: README e ADR-006
 
 ### Regras de execução de cada fase
 
@@ -427,18 +427,18 @@ O plano tem 7 fases, na ordem do item 8 do `requirements.md` e do "Plano de entr
 
 **Fase 7: Documentação**
 
-- [ ] 28. README e ADR-006
-  - [ ] 28.1 Atualizar o `README.md` em pt-br
+- [x] 28. README e ADR-006
+  - [x] 28.1 Atualizar o `README.md` em pt-br
     - Seção do módulo de balanço hídrico: fluxo diário, endpoints, exemplos de requisição e resposta, política de arredondamento, tratamento de erros e a limitação do módulo (fórmulas do usuário, sem metodologia no `CalculationEngine`)
     - _Requisitos: 16.1, 16.2_
-  - [ ] 28.2 Criar `docs/adr/ADR-006-balanco-hidrico-fora-do-motor-registrado.md` e atualizar `docs/adr/README.md`
+  - [x] 28.2 Criar `docs/adr/ADR-006-balanco-hidrico-fora-do-motor-registrado.md` e atualizar `docs/adr/README.md`
     - Registrar o balanço hídrico fora do `CalculationEngine` (DD-03), as revisões imutáveis (DD-01) e o reprocessamento tudo-ou-nada (DD-02), com alternativas rejeitadas, no formato dos ADRs 001 a 005
     - _Requisitos: 12.7, 13.2, 13.5_
-  - [ ] 28.3 Atualizar este `tasks.md` e registrar o fechamento
+  - [x] 28.3 Atualizar este `tasks.md` e registrar o fechamento
     - Marcar as fases concluídas com os números verificados (testes unitários, de integração e cobertura) e completar o "Registro da revisão A-01" e as decisões A-01 a A-08 efetivamente aplicadas
     - _Requisitos: 16.8_
 
-- [ ] 29. Checkpoint final: verificação completa
+- [x] 29. Checkpoint final: verificação completa
   - Rodar `clean test integrationTest jacocoTestCoverageVerification` com o Docker aberto e conferir todos os relatórios. Se houver `docker-compose.yml` afetado pelas migrações, conferir que `docker compose up --build` aplica V1 a V6
   - Informar o resultado final e as pendências. **Aguardar a aprovação final do usuário**
 
@@ -474,12 +474,68 @@ Antes das alterações: `test` com 18 falhas em 223; `integrationTest` com 1 fal
 
 Observação: os construtores de compatibilidade de `CropInput` e `CropRequest` continuam existindo, mas nenhum teste de controlador os usa; nenhuma alteração foi necessária neles.
 
+**Lista efetiva (conferida com o histórico do git, tarefa 28.3).** Os 10 itens da tabela acima são as únicas alterações de **asserções** motivadas pela A-01, todas feitas na Fase 1 (commit `2b853eb`). Os demais testes preexistentes que o git mostra como modificados não tiveram asserção de comportamento alterada por obrigatoriedade removida. As mudanças mecânicas, por fase, são:
+
+| Fase | Teste preexistente modificado | Natureza da mudança | Relação com a A-01 |
+|---|---|---|---|
+| 1 | `MigrationIntegrationTest` | Versões esperadas em `flyway_schema_history` passam de 1 a 3 para 1 a 4; a consulta de colunas de `soil_profiles` deixa de filtrar `is_nullable = 'NO'`, porque a V4 relaxou o `NOT NULL` das unidades (Req 1.6) | Consequência de nova migração (V4) e do Req 1.6 |
+| 1 | `RepositoryRoundTripIntegrationTest`, `PersistenceMappersTest` | Casos acrescentados para campos nulos e campos novos (Req 1.10, 1.11, 2.7, 3.4) | Extensão, sem alterar asserção existente |
+| 1 | `TestData` | Fixture de cultura passa a informar `kc` e `rootDepth` (Req 2.10) | Já listada na tabela (fixtures) |
+| 2 | `ArchitectureTest`, `RangeSpec` | Regras de ArchUnit de `domain.waterbalance` e faixas dos novos value objects, sem remover nem enfraquecer regra existente | Extensão |
+| 3 | `MigrationIntegrationTest` | Versões esperadas passam a 1 a 5 (V5) | Nova migração |
+| 3 | `TestData` | Fixtures de plano, meteorologia, IR e relógio fixo | Extensão |
+| 4 | `MigrationIntegrationTest` | Versões esperadas passam a 1 a 6 (V6) | Nova migração |
+| 4 | `TestData` | Fixtures do balanço e das séries do Cenário A | Extensão |
+| 4 | `InMemoryManagementPlanRepository` | Ajuste do repositório em memória de suporte (não é teste) | Suporte |
+| 4 (commit `83581bd`) | `WaterBalanceServiceTest`, `WaterBalanceReprocessTest`, `WaterBalanceServiceHarness` | Ajustes junto da correção em `WaterBalanceService`, em testes criados no módulo novo | Fora da A-01 (testes novos do módulo) |
+| 6 | `ArchitectureTest` | Ajuste de formatação (chaves) | Nenhuma |
+
+A Fase 5 (commit `10d3553`) não alterou nenhum teste preexistente.
+
+## Decisões efetivamente aplicadas
+
+Decisões do `design.md` (tabela de itens A-01 a A-08), como ficaram no código entregue, e decisões do usuário durante a execução.
+
+### Itens A-01 a A-08
+
+- **A-01:** Os Requisitos 16.8 e 1.6, 2.5 e 3.1 não podiam ser cumpridos juntos. Foram alteradas somente asserções que codificavam obrigatoriedade removida, uma a uma, com comentário "Revisão A-01" no teste. A lista está no "Registro da revisão A-01" acima.
+- **A-02:** O `PUT` do plano aceita `endDate` opcional. `endDate` não pode ser anterior a `startDate` nem ao último dia calculado. Um plano novo começa depois do `endDate` de todos os anteriores da área.
+- **A-03:** O 400 por data anterior ao primeiro plano da área é avaliado logo depois da verificação da área. Área sem plano gera 422.
+- **A-04:** TR é inteiro maior ou igual a 1, sem limite superior e sem verificação de sequência. O limite fica numa constante única de `CycleDay`.
+- **A-05:** Meteorologia e IR usam `POST` com a data no corpo (upsert). Data ausente gera `violations[]` com 400.
+- **A-06:** Corrida entre dois cálculos da mesma área e data, ou entre cálculo e reprocessamento, gera 409 (`AreaOperationLock`). Duplicidade sem corrida continua em 422.
+- **A-07:** O par gravimétrico de CC e PMP também é "ambos ou nenhum", com `CC > PMP` quando presente. Um só valor gera 400.
+- **A-08:** O domínio recusa KC e Z com mais de 2 casas decimais, e também CC e PMP gravimétricos (400), para não arredondar valor em silêncio nas colunas `NUMERIC`.
+
+### Decisões do usuário durante a execução
+
+- **Primeiro dia do plano:** o dia de AFDi = CAD × F (sem recomendação, motivo `FIRST_DAY_OF_FIRST_CYCLE`) vale só para o primeiro plano da área. Um plano posterior continua a cadeia a partir da AFDf do último dia calculado.
+- **Exclusão de cultura ou solo com balanço:** a mensagem do 422 cita "planos de manejo". Mantido como está.
+- **Revisões de data sem cálculo:** a consulta de revisões de uma data sem balanço devolve 404. Mantido.
+- **Rollback do reprocessamento:** sem mudança. O reprocessamento continua tudo-ou-nada (DD-02): falha de pré-condição aborta sem gravar nada.
+- **Reprocessamentos simultâneos:** mantidos como estão. O segundo pedido para a mesma área recebe 409 pelo bloqueio da área.
+- **`kc` e `rootDepthMm` obrigatórios na API de cultura (Req 2.10):** a API de cultura passa a exigir os dois campos, mesmo isso conflitando com a compatibilidade do Req 16.1 (clientes que criavam cultura só com nome e estágios recebem 400). O usuário aceitou a mudança de contrato, e ela está registrada no `README.md`. O domínio e o banco continuam aceitando `kc` e `rootDepth` nulos (registros antigos).
+
+## Fechamento
+
+Números verificados no checkpoint de cada fase (contagens dos XML de `build/test-results` e cobertura de linha do JaCoCo, medida só com a tarefa `test`). Todas as execuções terminaram sem falhas e sem testes ignorados.
+
+| Fase | Testes unitários | Testes de integração | Cobertura de linha |
+|---|---|---|---|
+| 1: Cadastros opcionais e V4 | 311 | 65 | 88,92% |
+| 2: Value objects e calculador | 463 | 65 | 89,76% |
+| 3: Plano, meteorologia e IR | 565 | 96 | 87,12% |
+| 4: Balanço imutável e reprocessamento | 674 | 147 | 86,63% |
+| 5: Controladores, DTOs e OpenAPI | 761 | 147 | 87,27% |
+| 6: Integração ponta a ponta, ArchUnit e cobertura | 768 | 180 | 88,34% |
+| 7: Documentação | 768 | 180 | 88,34% (2.554 de 2.891 linhas) |
+
 ## Task Dependency Graph
 
 ```json
 {
   "waves": [
-    { "id": 0, "tasks": ["1.1", "2.1"] },
+    { "id": 0, "tasks": ["1.1", "2.1", "Fase 7: README e ADR-006"] },
     { "id": 1, "tasks": ["1.2", "2.2", "2.3", "2.4"] },
     { "id": 2, "tasks": ["3.1", "3.2"] },
     { "id": 3, "tasks": ["3.3"] },
@@ -515,7 +571,8 @@ Observação: os construtores de compatibilidade de `CropInput` e `CropRequest` 
     { "id": 33, "tasks": ["25.2"] },
     { "id": 34, "tasks": ["25.3"] },
     { "id": 35, "tasks": ["26.2"] },
-    { "id": 36, "tasks": ["28.1", "28.2", "28.3"] }
+    { "id": 36, "tasks": ["28.1", "28.2", "28.3"] },
+    { "id": 37, "tasks": ["29"] }
   ]
 }
 ```

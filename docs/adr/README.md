@@ -9,5 +9,6 @@ Registro das principais decisões arquiteturais do irrigation-management-backend
 | [ADR-003](ADR-003-monolito-modular.md) | Monólito modular em vez de microsserviços | Aceito |
 | [ADR-004](ADR-004-problem-details-rfc-7807.md) | Problem Details (RFC 7807) para erros | Aceito |
 | [ADR-005](ADR-005-testes-baseados-em-propriedades.md) | Testes baseados em propriedades com jqwik | Aceito |
+| [ADR-006](ADR-006-balanco-hidrico-fora-do-motor-registrado.md) | Balanço hídrico fora do motor registrado, com revisões imutáveis e reprocessamento tudo-ou-nada | Aceito |
 
 Modelo usado: Título, Status, Data, Contexto, Decisão, Alternativas consideradas e Consequências.

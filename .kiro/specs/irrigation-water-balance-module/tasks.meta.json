@@ -1214,6 +1214,56 @@
         "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
         "timestamp": 1795208788808
       }
+    ],
+    "28.1 Atualizar o `README.md` em pt-br": [
+      {
+        "executionId": "ddeb736f-5f8a-4c47-b596-579b1870e0f5",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795210965455
+      },
+      {
+        "executionId": "ddeb736f-5f8a-4c47-b596-579b1870e0f5",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795211082061
+      }
+    ],
+    "28.2 Criar `docs/adr/ADR-006-balanco-hidrico-fora-do-motor-registrado.md` e atualizar `docs/adr/README.md`": [
+      {
+        "executionId": "ddeb736f-5f8a-4c47-b596-579b1870e0f5",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795210965773
+      },
+      {
+        "executionId": "ddeb736f-5f8a-4c47-b596-579b1870e0f5",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795211083980
+      }
+    ],
+    "28.3 Atualizar este `tasks.md` e registrar o fechamento": [
+      {
+        "executionId": "ddeb736f-5f8a-4c47-b596-579b1870e0f5",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795211084155
+      },
+      {
+        "executionId": "ddeb736f-5f8a-4c47-b596-579b1870e0f5",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795211202012
+      }
+    ],
+    "28. README e ADR-006": [
+      {
+        "executionId": "ddeb736f-5f8a-4c47-b596-579b1870e0f5",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795211202230
+      }
+    ],
+    "29. Checkpoint final: verificação completa": [
+      {
+        "executionId": "ddeb736f-5f8a-4c47-b596-579b1870e0f5",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795211202450
+      }
     ]
   }
 }
