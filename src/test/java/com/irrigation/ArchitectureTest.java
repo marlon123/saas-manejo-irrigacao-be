@@ -127,4 +127,5 @@ class ArchitectureTest {
                                 "retorno de " + unit.getFullName() + " usa " + returnType));
                     }
                 }
-            });}
+            });
+}

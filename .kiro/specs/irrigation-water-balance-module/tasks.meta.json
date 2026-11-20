@@ -1121,6 +1121,99 @@
         "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
         "timestamp": 1795203517607
       }
+    ],
+    "25.1 Ciclo de vida HTTP do Cenário A e do Cenário B": [
+      {
+        "executionId": "89e7e9b7-2eae-4973-87df-b8d206455591",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795207752737
+      },
+      {
+        "executionId": "89e7e9b7-2eae-4973-87df-b8d206455591",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795207938262
+      }
+    ],
+    "26.1 Conferir o `ArchitectureTest` completo": [
+      {
+        "executionId": "89e7e9b7-2eae-4973-87df-b8d206455591",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795207752999
+      },
+      {
+        "executionId": "89e7e9b7-2eae-4973-87df-b8d206455591",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795207939858
+      }
+    ],
+    "25.2 Erros, duplicidade, imutabilidade e exclusões (Cenário D)": [
+      {
+        "executionId": "89e7e9b7-2eae-4973-87df-b8d206455591",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795207940170
+      },
+      {
+        "executionId": "89e7e9b7-2eae-4973-87df-b8d206455591",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795208425596
+      }
+    ],
+    "25.3 Reprocessamento (Cenário E) e concorrência por HTTP": [
+      {
+        "executionId": "89e7e9b7-2eae-4973-87df-b8d206455591",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795207940593
+      },
+      {
+        "executionId": "89e7e9b7-2eae-4973-87df-b8d206455591",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795208425112
+      }
+    ],
+    "25.4 Compatibilidade HTTP dos endpoints existentes e dos dados antigos": [
+      {
+        "executionId": "89e7e9b7-2eae-4973-87df-b8d206455591",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795207942173
+      },
+      {
+        "executionId": "89e7e9b7-2eae-4973-87df-b8d206455591",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795208426035
+      }
+    ],
+    "25. Testes de integração ponta a ponta (`@Tag(\"integration\")`, base `PostgresIntegrationTest`)": [
+      {
+        "executionId": "89e7e9b7-2eae-4973-87df-b8d206455591",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795208426380
+      }
+    ],
+    "26.2 Conferir a cobertura por pacote e complementar testes unitários": [
+      {
+        "executionId": "89e7e9b7-2eae-4973-87df-b8d206455591",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795208426999
+      },
+      {
+        "executionId": "89e7e9b7-2eae-4973-87df-b8d206455591",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795208784458
+      }
+    ],
+    "26. Arquitetura e cobertura": [
+      {
+        "executionId": "89e7e9b7-2eae-4973-87df-b8d206455591",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795208784959
+      }
+    ],
+    "27. Checkpoint da Fase 6: build, testes e relatórios": [
+      {
+        "executionId": "89e7e9b7-2eae-4973-87df-b8d206455591",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795208788808
+      }
     ]
   }
 }

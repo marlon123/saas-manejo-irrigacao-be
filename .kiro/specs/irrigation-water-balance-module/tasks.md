@@ -11,7 +11,7 @@ O plano tem 7 fases, na ordem do item 8 do `requirements.md` e do "Plano de entr
 - [x] Fase 3: Plano de Manejo, meteorologia e Irrigação Real (migração V5, domínio, persistência e serviços)
 - [x] Fase 4: Balanço diário imutável (migração V6), cálculo, reprocessamento e consulta (domínio, persistência e serviços)
 - [x] Fase 5: Controladores, DTOs, tratamento de erros e OpenAPI
-- [ ] Fase 6: Testes de integração ponta a ponta, ArchUnit e cobertura
+- [x] Fase 6: Testes de integração ponta a ponta, ArchUnit e cobertura
 - [ ] Fase 7: README e ADR-006
 
 ### Regras de execução de cada fase
@@ -396,29 +396,29 @@ O plano tem 7 fases, na ordem do item 8 do `requirements.md` e do "Plano de entr
 
 **Fase 6: Integração ponta a ponta, ArchUnit e cobertura**
 
-- [ ] 25. Testes de integração ponta a ponta (`@Tag("integration")`, base `PostgresIntegrationTest`)
-  - [ ] 25.1 Ciclo de vida HTTP do Cenário A e do Cenário B
+- [x] 25. Testes de integração ponta a ponta (`@Tag("integration")`, base `PostgresIntegrationTest`)
+  - [x] 25.1 Ciclo de vida HTTP do Cenário A e do Cenário B
     - Cadastro mínimo de solo (tipo, CC, PMP e D), cultura (nome, KC e Z) e área (nome); plano; meteorologia e IR dos 7 dias; cálculo dos 7 dias com conferência da tabela linha a linha (valores persistidos sem arredondamento, apresentação arredondada); consulta por período e por data; Cenário B com AFDf acima do CAD
     - _Requisitos: 7.1, 7.3, 8.1, 8.2, 8.3, 8.5, 9.2, 9.3, 9.4, 10.1, 10.3, 14.1, 14.2_
-  - [ ] 25.2 Erros, duplicidade, imutabilidade e exclusões (Cenário D)
+  - [x] 25.2 Erros, duplicidade, imutabilidade e exclusões (Cenário D)
     - Sem meteorologia, sem IR, sem histórico, mesma data duas vezes (422 e uma linha corrente), solo sem CC gravimétrico (422 listando o campo), `precipitationMm` omitido (400), `sprinklerRateMmPerHour` igual a 0 (400 na criação do plano); alterar F, solo, cultura e meteorologia não muda linhas gravadas; exclusão de área, solo e cultura referenciados retorna 422 sem alterar os registros
     - _Requisitos: 1.13, 2.9, 3.5, 4.4, 4.9, 7.7, 8.4, 11.1, 11.2, 11.3, 11.4, 11.7, 12.6_
-  - [ ] 25.3 Reprocessamento (Cenário E) e concorrência por HTTP
+  - [x] 25.3 Reprocessamento (Cenário E) e concorrência por HTTP
     - Reprocesso a partir do dia 2 com revisões antigas preservadas e não correntes, uma corrente por dia, `GET /{date}/revisions` em ordem decrescente; reprocesso com data não calculada (422); reprocesso com pré-condição violada em dia posterior sem gravar nada; 409 em requisição concorrente
     - _Requisitos: 13.1, 13.2, 13.3, 13.4, 13.5, 13.6, 13.7, 13.8_
-  - [ ] 25.4 Compatibilidade HTTP dos endpoints existentes e dos dados antigos
+  - [x] 25.4 Compatibilidade HTTP dos endpoints existentes e dos dados antigos
     - Requisições válidas de clientes existentes de área, solo, cultura e recomendação recebem as mesmas respostas de sucesso; `POST /api/v1/recommendations/calculate` mantém o contrato; registros anteriores à V4 continuam legíveis e editáveis com os mesmos valores
     - _Requisitos: 1.10, 1.11, 2.6, 2.7, 3.4, 16.1, 16.2_
 
-- [ ] 26. Arquitetura e cobertura
-  - [ ] 26.1 Conferir o `ArchitectureTest` completo
+- [x] 26. Arquitetura e cobertura
+  - [x] 26.1 Conferir o `ArchitectureTest` completo
     - Todas as regras existentes ativas e passando (sem remover, desabilitar ou enfraquecer), as regras novas de `domain.waterbalance` e controladores sob `/api/v1`. Verificar que nenhuma regra existente foi alterada
     - _Requisitos: 7.10, 15.1, 16.7_
-  - [ ] 26.2 Conferir a cobertura por pacote e complementar testes unitários
+  - [x] 26.2 Conferir a cobertura por pacote e complementar testes unitários
     - Ler o relatório do JaCoCo, identificar classes novas com cobertura baixa e acrescentar testes unitários. O JaCoCo continua medindo só a tarefa `test`, com meta de 80% de linha em `check`. Relatório combinado com integração continua fora do escopo, salvo pedido do usuário
     - _Requisitos: 16.6_
 
-- [ ] 27. Checkpoint da Fase 6: build, testes e relatórios
+- [x] 27. Checkpoint da Fase 6: build, testes e relatórios
   - Rodar `clean test integrationTest jacocoTestCoverageVerification` com o Docker aberto. Conferir contagens nos XML de `build/test-results` (unitários e integração), ausência de falhas e de testes pulados, e o relatório do JaCoCo (cobertura de linha de pelo menos 80%)
   - Confirmar os critérios de aceite transversais 1 a 5 do `requirements.md` (seção 6)
   - Informar o que foi feito, as decisões e as pendências. **Aguardar aprovação antes da Fase 7**
