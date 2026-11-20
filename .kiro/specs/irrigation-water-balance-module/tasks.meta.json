@@ -1028,6 +1028,99 @@
         "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
         "timestamp": 1795186009302
       }
+    ],
+    "22.1 Criar DTOs `*Request` e `*Response` e mapeadores MapStruct": [
+      {
+        "executionId": "fc95621b-e0fd-4946-aa96-65a63e9ff59e",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795202705579
+      },
+      {
+        "executionId": "fc95621b-e0fd-4946-aa96-65a63e9ff59e",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795202823864
+      }
+    ],
+    "22.3 Acrescentar handlers ao `GlobalExceptionHandler` e a anotação `ConflictResponse`": [
+      {
+        "executionId": "fc95621b-e0fd-4946-aa96-65a63e9ff59e",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795202705988
+      },
+      {
+        "executionId": "fc95621b-e0fd-4946-aa96-65a63e9ff59e",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795202824471
+      }
+    ],
+    "22.2 Criar os quatro controladores sob `/api/v1`": [
+      {
+        "executionId": "fc95621b-e0fd-4946-aa96-65a63e9ff59e",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795202829254
+      },
+      {
+        "executionId": "fc95621b-e0fd-4946-aa96-65a63e9ff59e",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795202950619
+      }
+    ],
+    "22. Apresentação": [
+      {
+        "executionId": "fc95621b-e0fd-4946-aa96-65a63e9ff59e",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795202950866
+      }
+    ],
+    "23.1 Escrever testes `MockMvc` de plano, meteorologia e Irrigação Real": [
+      {
+        "executionId": "fc95621b-e0fd-4946-aa96-65a63e9ff59e",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795202951121
+      },
+      {
+        "executionId": "fc95621b-e0fd-4946-aa96-65a63e9ff59e",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795203513153
+      }
+    ],
+    "23.2 Escrever testes `MockMvc` do `WaterBalanceController`": [
+      {
+        "executionId": "fc95621b-e0fd-4946-aa96-65a63e9ff59e",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795202951527
+      },
+      {
+        "executionId": "fc95621b-e0fd-4946-aa96-65a63e9ff59e",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795203513584
+      }
+    ],
+    "23.3 Escrever testes do `GlobalExceptionHandler` para os novos erros": [
+      {
+        "executionId": "fc95621b-e0fd-4946-aa96-65a63e9ff59e",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795202952076
+      },
+      {
+        "executionId": "fc95621b-e0fd-4946-aa96-65a63e9ff59e",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795203512559
+      }
+    ],
+    "23. Testes da Fase 5": [
+      {
+        "executionId": "fc95621b-e0fd-4946-aa96-65a63e9ff59e",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795203513890
+      }
+    ],
+    "24. Checkpoint da Fase 5: build, testes e relatórios": [
+      {
+        "executionId": "fc95621b-e0fd-4946-aa96-65a63e9ff59e",
+        "chatSessionId": "sess_08360b1f-eaff-44da-acfe-3bad4545a045",
+        "timestamp": 1795203517607
+      }
     ]
   }
 }

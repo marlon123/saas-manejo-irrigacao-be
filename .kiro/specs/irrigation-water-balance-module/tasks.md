@@ -10,7 +10,7 @@ O plano tem 7 fases, na ordem do item 8 do `requirements.md` e do "Plano de entr
 - [x] Fase 2: Value objects, `WaterBalanceCalculator` puro e `PresentationRounding`
 - [x] Fase 3: Plano de Manejo, meteorologia e Irrigação Real (migração V5, domínio, persistência e serviços)
 - [x] Fase 4: Balanço diário imutável (migração V6), cálculo, reprocessamento e consulta (domínio, persistência e serviços)
-- [ ] Fase 5: Controladores, DTOs, tratamento de erros e OpenAPI
+- [x] Fase 5: Controladores, DTOs, tratamento de erros e OpenAPI
 - [ ] Fase 6: Testes de integração ponta a ponta, ArchUnit e cobertura
 - [ ] Fase 7: README e ADR-006
 
@@ -364,31 +364,31 @@ O plano tem 7 fases, na ordem do item 8 do `requirements.md` e do "Plano de entr
 
 **Fase 5: Controladores, DTOs, erros e OpenAPI**
 
-- [ ] 22. Apresentação
-  - [ ] 22.1 Criar DTOs `*Request` e `*Response` e mapeadores MapStruct
+- [x] 22. Apresentação
+  - [x] 22.1 Criar DTOs `*Request` e `*Response` e mapeadores MapStruct
     - Nomes de campo com unidade onde há ambiguidade (`sprinklerRateMmPerHour`, `etpMm`, `precipitationMm`, `appliedIrrigationMm`). `DailyWaterBalanceResponse` com os grupos `inputs`, `results` (com `operatingTime` em `hours`, `wholeHours` e `minutes`) e `control`. `unmappedTargetPolicy = ERROR`. Data no corpo para meteorologia e IR (A-05)
     - _Requisitos: 9.5, 10.3, 10.6, 14.2, 15.7_
-  - [ ] 22.2 Criar os quatro controladores sob `/api/v1`
+  - [x] 22.2 Criar os quatro controladores sob `/api/v1`
     - `ManagementPlanController`: `POST` (201), `GET` lista, `GET /{planId}`, `PUT /{planId}`
     - `DailyWeatherController` e `AppliedIrrigationController`: `POST` upsert (200), `GET ?from&to`
     - `WaterBalanceController`: `POST /calculate` (201), `POST /reprocess` (200), `GET ?from&to&page&size`, `GET /{date}`, `GET /{date}/revisions`
     - _Requisitos: 4.2, 4.11, 5.1, 5.9, 6.1, 6.10, 7.3, 13.6, 14.1, 14.2_
-  - [ ] 22.3 Acrescentar handlers ao `GlobalExceptionHandler` e a anotação `ConflictResponse`
+  - [x] 22.3 Acrescentar handlers ao `GlobalExceptionHandler` e a anotação `ConflictResponse`
     - `PreconditionsNotMetException` (422 com extensões `date` e `preconditions[]`), `ConflictException` (409) e `ImmutableRecordException` (422), sem alterar os handlers existentes. O handler mais específico prevalece sobre `BusinessRuleException`. Documentar as respostas no OpenAPI
     - _Requisitos: 11.5, 12.8, 12.10, 13.8, 16.1_
 
-- [ ] 23. Testes da Fase 5
-  - [ ] 23.1 Escrever testes `MockMvc` de plano, meteorologia e Irrigação Real
+- [x] 23. Testes da Fase 5
+  - [x] 23.1 Escrever testes `MockMvc` de plano, meteorologia e Irrigação Real
     - Status 201, 200, 400 (`violations[]` com todos os campos), 404 e 422; datas no corpo; período inválido
     - _Requisitos: 4.2, 4.3, 4.5, 4.6, 4.8, 5.4, 5.5, 5.10, 5.11, 6.2, 6.5, 6.11_
-  - [ ] 23.2 Escrever testes `MockMvc` do `WaterBalanceController`
+  - [x] 23.2 Escrever testes `MockMvc` do `WaterBalanceController`
     - 201, 200, 400, 404, 409 e 422; `preconditions[]` com uma entrada por falha; política de arredondamento idêntica em todos os endpoints (2 casas em mm, 4 em horas, minutos de 0 a 59); paginação inválida retorna 400 sem ajuste; `noRecommendationReason` e `irrigationRecommended` na resposta
     - _Requisitos: 7.3, 10.3, 11.5, 13.8, 14.1, 14.4, 14.5, 14.6, 14.8, 15.7_
-  - [ ] 23.3 Escrever testes do `GlobalExceptionHandler` para os novos erros
+  - [x] 23.3 Escrever testes do `GlobalExceptionHandler` para os novos erros
     - Prevalência do handler específico, formato Problem_Details e preservação dos handlers antigos
     - _Requisitos: 11.5, 12.8, 12.10, 16.1_
 
-- [ ] 24. Checkpoint da Fase 5: build, testes e relatórios
+- [x] 24. Checkpoint da Fase 5: build, testes e relatórios
   - Rodar `clean test integrationTest jacocoTestCoverageVerification`, conferir contagens nos XML, ausência de falhas e de testes pulados, e cobertura de linha do JaCoCo (mínimo de 80%)
   - Informar o que foi feito, as decisões e as pendências. **Aguardar aprovação antes da Fase 6**
 

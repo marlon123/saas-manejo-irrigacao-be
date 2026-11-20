@@ -7,7 +7,10 @@ import com.irrigation.domain.calculation.exception.DuplicateMethodologyException
 import com.irrigation.domain.calculation.exception.InvalidCalculationInputException;
 import com.irrigation.domain.calculation.exception.MethodologyNotAvailableException;
 import com.irrigation.domain.exception.BusinessRuleException;
+import com.irrigation.domain.exception.ConflictException;
 import com.irrigation.domain.exception.EntityNotFoundException;
+import com.irrigation.domain.exception.ImmutableRecordException;
+import com.irrigation.domain.exception.PreconditionsNotMetException;
 import jakarta.validation.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +38,8 @@ import java.util.List;
  * <ul>
  *   <li>400 — entrada inválida, com a extensão {@code violations[]} (campo + mensagem)</li>
  *   <li>404 — recurso inexistente</li>
- *   <li>422 — violação de regra de negócio</li>
+ *   <li>409 — conflito (ex.: processamento em andamento para a mesma área)</li>
+ *   <li>422 — violação de regra de negócio (inclui pré-condições não atendidas e registro imutável)</li>
  *   <li>500 — erro inesperado, com detalhe genérico (sem stack trace nem detalhes internos)</li>
  * </ul>
  *
@@ -49,6 +53,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     static final String TITLE_INVALID = "Dados inválidos";
     static final String TITLE_NOT_FOUND = "Recurso não encontrado";
     static final String TITLE_BUSINESS_RULE = "Violação de regra de negócio";
+    static final String TITLE_CONFLICT = "Conflito";
     static final String TITLE_UNEXPECTED = "Erro interno do servidor";
     static final String DETAIL_UNEXPECTED = "Ocorreu um erro inesperado. Tente novamente mais tarde.";
 
@@ -133,6 +138,36 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return problem(ex, HttpStatus.UNPROCESSABLE_ENTITY, TITLE_BUSINESS_RULE, ex.getMessage(), null);
     }
 
+    /**
+     * Pré-condições do balanço hídrico não atendidas (Req 11.5). Mais específico que
+     * {@link BusinessRuleException}, portanto prevalece sobre o handler genérico.
+     */
+    @ExceptionHandler(PreconditionsNotMetException.class)
+    public ResponseEntity<Object> handlePreconditionsNotMet(PreconditionsNotMetException ex) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage());
+        problem.setTitle(TITLE_BUSINESS_RULE);
+        problem.setProperty("date", ex.getDate().toString());
+        problem.setProperty("preconditions", ex.getPreconditions().stream()
+                .map(p -> new PreconditionView(p.code().name(), p.message(), p.fields()))
+                .toList());
+        logException(ex, HttpStatus.UNPROCESSABLE_ENTITY);
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
+                .contentType(MediaType.APPLICATION_PROBLEM_JSON).body(problem);
+    }
+
+    /** Registro imutável (Req 13.8). Mais específico que {@link BusinessRuleException}. */
+    @ExceptionHandler(ImmutableRecordException.class)
+    public ResponseEntity<Object> handleImmutableRecord(ImmutableRecordException ex) {
+        return problem(ex, HttpStatus.UNPROCESSABLE_ENTITY, TITLE_BUSINESS_RULE, ex.getMessage(), null);
+    }
+
+    // ------------------------------------------------------------------ 409
+
+    @ExceptionHandler(ConflictException.class)
+    public ResponseEntity<Object> handleConflict(ConflictException ex) {
+        return problem(ex, HttpStatus.CONFLICT, TITLE_CONFLICT, ex.getMessage(), null);
+    }
+
     // ------------------------------------------------------------------ 500
 
     @ExceptionHandler(Exception.class)
@@ -168,6 +203,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         } else {
             log.warn("Requisição rejeitada [{}] ({}): {}", ex.getClass().getName(), status.value(), ex.getMessage(), ex);
         }
+    }
+
+    /** Item da extensão {@code preconditions[]} da resposta 422. */
+    record PreconditionView(String code, String message, List<String> fields) {
     }
 
     private static String lastSegment(String path) {

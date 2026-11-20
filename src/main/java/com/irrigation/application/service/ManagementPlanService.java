@@ -161,6 +161,16 @@ public class ManagementPlanService {
         return plans.findByAreaOrderByStartDateDesc(areaId).stream().map(ManagementPlanOutput::from).toList();
     }
 
+    /** Plano da área pelo identificador; 404 se a área não existe ou se o plano pertence a outra área. */
+    @Transactional(readOnly = true)
+    public ManagementPlanOutput getById(UUID areaId, UUID planId) {
+        requireArea(areaId);
+        return plans.findById(planId)
+                .filter(p -> p.getAreaId().equals(areaId))
+                .map(ManagementPlanOutput::from)
+                .orElseThrow(() -> new EntityNotFoundException(PLAN, planId));
+    }
+
     private void requireArea(UUID id) {
         if (!areas.existsById(id)) {
             throw new EntityNotFoundException(AREA, id);
